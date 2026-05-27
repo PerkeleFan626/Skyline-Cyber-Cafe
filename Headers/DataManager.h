@@ -13,9 +13,9 @@ private:
 
 public:
     DataManager(
-    string pub_f = "public_users.csv",
-    string adm_f = "admins.csv",
-    string ses_f = "user_sessions.csv"
+    string pub_f = "../public_users.csv",
+    string adm_f = "../admins.csv",
+    string ses_f = "../user_sessions.csv"
     );
 
     bool add_public_user(const PublicUser& user); //When a new user registers an account, this function opens public_users.csv using ofstream and writes the new user details as a new row at the bottom of the file.
