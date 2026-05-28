@@ -3,4 +3,12 @@ project(Cafe)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Cafe main.cpp)
+add_executable(Cafe main.cpp
+        Headers/DataManagerStructs.h
+        Headers/DataManagerStructs.h
+        Headers/DataManager.h
+        DataManager.cpp
+        DataManager.cpp
+        Headers/UserManager.h
+        UserManager.cpp
+        Headers/CallingClassGlobal.h)
