@@ -1,8 +1,13 @@
-//
-// Created by Yoobee270829600 on 5/28/2026.
-//
+#pragma once
 
-#ifndef CAFE_USERMANAGER_H
-#define CAFE_USERMANAGER_H
+#include "DataManager.h"
 
-#endif //CAFE_USERMANAGER_H
+class UserManager {
+private:
+    DataManager& dbManager;
+
+public:
+    UserManager(DataManager& manager);
+
+    bool find_user_by_id(int searchId, PublicUser& foundUser);
+};

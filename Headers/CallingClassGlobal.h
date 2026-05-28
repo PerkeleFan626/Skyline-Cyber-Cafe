@@ -1,8 +1,4 @@
-//
-// Created by Yoobee270829600 on 5/28/2026.
-//
+#pragma once
 
-#ifndef CAFE_CALLINGCLASSGLOBAL_H
-#define CAFE_CALLINGCLASSGLOBAL_H
-
-#endif //CAFE_CALLINGCLASSGLOBAL_H
+DataManager dataStorage;
+UserManager userControl(dataStorage);

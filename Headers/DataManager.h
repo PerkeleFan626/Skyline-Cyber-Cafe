@@ -11,12 +11,15 @@ private:
     void bootstrap_files();
     vector<string>split_csv_line(const string& line);
 
+    string trim(const string& str);
+
 public:
     DataManager(
     string pub_f = "../public_users.csv",
     string adm_f = "../admins.csv",
     string ses_f = "../user_sessions.csv"
     );
+
 
     bool add_public_user(const PublicUser& user); //When a new user registers an account, this function opens public_users.csv using ofstream and writes the new user details as a new row at the bottom of the file.
     vector<PublicUser> get_all_public_users(); //Opens the public_user.csv, skips the top header row and loops through it. It converts each text row into a C++ PublicUser object.
