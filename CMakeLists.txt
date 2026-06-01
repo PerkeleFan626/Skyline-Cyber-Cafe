@@ -3,4 +3,6 @@ project(Cafe)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Cafe main.cpp)
+add_executable(Cafe main.cpp
+        homepage.hpp
+        homepage.cpp)
