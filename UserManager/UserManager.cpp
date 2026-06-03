@@ -1,4 +1,4 @@
-#include "Headers/UserManager.h"
+#include "UserManager.h"
 #include <iostream>
 
 using namespace std;
@@ -60,4 +60,24 @@ void UserManager::print_all_users() {
              << user.joiningDate << " | NZD "
              << user.totalBill << endl;
     }
+}
+
+bool UserManager::remove_user_by_id(int searchId) {
+    vector<PublicUser> allUsers = dbManager.get_all_public_users();
+    bool found = false;
+
+    for (size_t i=0; i < allUsers.size(); i++) {
+        if (allUsers[i].uniqueId == searchId) {
+            allUsers.erase(allUsers.begin() + i);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "cannot delete user ID " << searchId << ". Record does not exist\n";
+        return false;
+    }
+
+    return dbManager.rewrite_public_users(allUsers);
 }

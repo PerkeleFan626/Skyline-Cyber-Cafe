@@ -1,12 +1,11 @@
 #include <iostream>
-#include "Headers/DataManager.h"
-#include "Headers/UserManager.h"
-#include "Headers/CallingClassGlobal.h"
+#include "DataManager/DataManager.h"
+#include "UserManager/UserManager.h"
+#include "Globals/CallingClassGlobal.h"
 
 
 int main() {
-    PublicUser matchingUser;
-
+    cout << "Search for id\n";
     int testId{};
     cin >> testId;
 
@@ -15,4 +14,16 @@ int main() {
     } else {
         cout << "Failure \n";
     }
+
+    cout << "delete id\n";
+    int idToDelete;
+    cin >> idToDelete;
+
+    if (userControl.remove_user_by_id(idToDelete)) {
+        cout << "Success\n";
+    } else {
+        cout << "failure\n";
+    }
+
+    userControl.print_all_users();
 }

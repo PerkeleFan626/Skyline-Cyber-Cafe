@@ -1,4 +1,5 @@
-#include "Headers/DataManager.h"
+#include "DataManager.h"
+#include "../Globals/Globals.h"
 #include <iostream>
 #include <fstream>
 #include <filesystem>
@@ -11,12 +12,20 @@ using namespace std;
 // ============================================================================
 
 DataManager::DataManager(string pub_f, string adm_f, string ses_f)
-    :public_file(pub_f),admin_file(adm_f),session_file(ses_f) {
-    bootstrap_files();
+        : public_file(filePath::DATA_DIR + pub_f),
+          admin_file(filePath::DATA_DIR + adm_f),
+          session_file(filePath::DATA_DIR + ses_f) {
+        bootstrap_files();
 }
 
 
 void DataManager::bootstrap_files() {
+
+    filesystem::path dirPath(filePath::DATA_DIR);
+
+    if (!filesystem::exists(dirPath)) {
+        filesystem::create_directories(dirPath);
+    }
 
     if (!filesystem::exists(public_file)) {
         ofstream f(public_file);
@@ -125,4 +134,24 @@ vector<PublicUser> DataManager::get_all_public_users() {
     }
 
     return users;
+}
+
+bool DataManager::rewrite_public_users(const vector<PublicUser>& users) {
+    ofstream f(public_file, ios::trunc);
+
+    if (f.is_open()) {
+        f << "uniqueId,userName,password,email,joiningDate,totalBill\n";
+
+        for (const auto& user : users) {
+            f << user.uniqueId << ","
+               << user.userName << ","
+               << user.password << ","
+               << user.email << ","
+               << user.joiningDate << ","
+               << user.totalBill << "\n";
+        }
+        f.close();
+        return true;
+    }
+    return false;
 }

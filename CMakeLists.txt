@@ -4,11 +4,12 @@ project(Cafe)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(Cafe main.cpp
-        Headers/DataManagerStructs.h
-        Headers/DataManagerStructs.h
-        Headers/DataManager.h
-        DataManager.cpp
-        DataManager.cpp
-        Headers/UserManager.h
-        UserManager.cpp
-        Headers/CallingClassGlobal.h)
+        DataManager/DataManagerStructs.h
+        DataManager/DataManagerStructs.h
+        DataManager/DataManager.h
+        DataManager/DataManager.cpp
+        DataManager/DataManager.cpp
+        UserManager/UserManager.h
+        UserManager/UserManager.cpp
+        Globals/CallingClassGlobal.h
+        Globals/Globals.h)
