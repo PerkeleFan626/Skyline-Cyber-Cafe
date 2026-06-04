@@ -1,6 +1,7 @@
 #pragma once
 #include "DataManagerStructs.h"
 #include "../Globals/Globals.h"
+#include "../Security/SecurityManager.h"
 
 
 class DataManager {
