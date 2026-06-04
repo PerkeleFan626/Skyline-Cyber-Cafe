@@ -108,8 +108,59 @@ void showRegistrationScreen() {
     std::cout << "  Enter your email    : ";
     std::getline(std::cin, email);
 
+    if (email.find('@') == std::string::npos || email.find('.') == std::string::npos) {
+        std::cout << "\n  Invalid email address!\n";
+        std::cout << "\n  Press Enter to return...";
+        std::cin.get();
+        return;
+    }
+
     std::cout << "  Enter your password : ";
     std::getline(std::cin, password);
+
+    // Password validation
+    bool hasUpper = false;
+    bool hasLower = false;
+    bool hasDigit = false;
+    bool hasSymbol = false;
+
+    for (char c : password) {
+        if (isupper(c)) hasUpper = true;
+        if (islower(c)) hasLower = true;
+        if (isdigit(c)) hasDigit = true;
+        if (ispunct(c)) hasSymbol = true;
+    }
+
+    if (password.length() < 8) {
+        std::cout << "\n  Password must be at least 8 characters!\n";
+        std::cout << "\n  Press Enter to return...";
+        std::cin.get();
+        return;
+    }
+    if (!hasUpper) {
+        std::cout << "\n  Password must contain at least one uppercase letter!\n";
+        std::cout << "\n  Press Enter to return...";
+        std::cin.get();
+        return;
+    }
+    if (!hasLower) {
+        std::cout << "\n  Password must contain at least one lowercase letter!\n";
+        std::cout << "\n  Press Enter to return...";
+        std::cin.get();
+        return;
+    }
+    if (!hasDigit) {
+        std::cout << "\n  Password must contain at least one number!\n";
+        std::cout << "\n  Press Enter to return...";
+        std::cin.get();
+        return;
+    }
+    if (!hasSymbol) {
+        std::cout << "\n  Password must contain at least one symbol (!@#$...)!\n";
+        std::cout << "\n  Press Enter to return...";
+        std::cin.get();
+        return;
+    }
 
     bool success = userControl.register_new_public_user(userName, password, email);
 
@@ -128,10 +179,28 @@ void showLoginScreen() {
     std::cout << "         SKYLINE CYBER CAFE - CUSTOMER LOGIN PORTAL\n";
     std::cout << "==========================================================================\033[0m\n\n";
 
-    std::cout << "  [SYSTEM NOTE]: Real login verification logic will be placed here.\n\n";
 
-    std::cout << "  Press Enter to return to the homepage...";
-    std::cin.ignore(1000, '\n');
+    std::string password;
+    std::string userName;
+    PublicUser loggedInUser;
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    std::cout << "  Enter your username    : ";
+    std::getline(std::cin, userName);
+
+    std::cout << "  Enter your password : ";
+    std::getline(std::cin, password);
+
+    bool success = userControl.authenticate_user(userName, password, loggedInUser);
+
+    if (success) {
+        std::cout << "\n  Welcome back, " << loggedInUser.userName << "!\n";
+    } else {
+        std::cout << "\n  Invalid email or password. Please try again.\n";
+    }
+
+    std::cout << "\n  Press Enter to return...";
     std::cin.get();
 }
 
