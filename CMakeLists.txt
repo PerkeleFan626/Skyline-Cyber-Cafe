@@ -12,4 +12,5 @@ add_executable(Cafe main.cpp
         UserManager/UserManager.h
         UserManager/UserManager.cpp
         Globals/CallingClassGlobal.h
-        Globals/Globals.h)
+        Globals/Globals.h
+        AdminManager/AdminStruct.h)

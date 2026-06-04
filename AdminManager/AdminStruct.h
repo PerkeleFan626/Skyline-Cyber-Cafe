@@ -1,8 +1,10 @@
-//
-// Created by Yoobee270829600 on 05-Jun-26.
-//
+#pragma once
 
-#ifndef CAFE_ADMINSTRUCT_H
-#define CAFE_ADMINSTRUCT_H
+#include <string>
+using namespace std;
 
-#endif //CAFE_ADMINSTRUCT_H
+// struct AdminUser {
+//     int adminId{};
+//     string
+//
+// };
