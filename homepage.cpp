@@ -4,6 +4,10 @@
 #include <thread> // Used for timing the animation
 #include <chrono> // Used for milliseconds definitions
 #include "homepage.hpp"
+#include "UserManager/UserManager.h"
+#include "Globals/Globals.h"
+DataManager dbManager;
+UserManager userControl(dbManager);
 
 // Console Width Canvas definition to ensure perfect centering alignment
 const int CONSOLE_WIDTH = 80;
@@ -92,14 +96,32 @@ void showRegistrationScreen() {
     std::cout << "         SKYLINE CYBER CAFE - NEW USER REGISTRATION\n";
     std::cout << "==========================================================================\033[0m\n\n";
 
-    std::cout << "  [SYSTEM NOTE]: This room is locked for Sprint Week 1.\n";
-    std::cout << "  Sebastian's data storage modules will be linked here next sprint.\n\n";
+    std::string userName;
+    std::string email;
+    std::string password;
 
-    std::cout << "  Press Enter to return to the homepage...";
-    std::cin.ignore(1000, '\n'); // Clear any leftover data
-    std::cin.get();              // Wait for user to physically press Enter
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    std::cout << "  Enter your name     : ";
+    std::getline(std::cin, userName);
+
+    std::cout << "  Enter your email    : ";
+    std::getline(std::cin, email);
+
+    std::cout << "  Enter your password : ";
+    std::getline(std::cin, password);
+
+    bool success = userControl.register_new_public_user(userName, password, email);
+
+    if (success) {
+        std::cout << "\n  Account created successfully! Welcome, " << userName << "!\n";
+    } else {
+        std::cout << "\n  Registration failed. Email may already be taken.\n";
+    }
+
+    std::cout << "\n  Press Enter to return...";
+    std::cin.get();
 }
-
 void showLoginScreen() {
     clearScreen();
     std::cout << "\033[36m==========================================================================\n";
