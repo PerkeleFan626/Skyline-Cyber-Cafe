@@ -1,135 +1,101 @@
 #include <iostream>
-#include "DataManager/DataManager.h"
-#include "UserManager/UserManager.h"
+#include <string>
 #include "Globals/CallingClassGlobal.h"
 
+using namespace std;
 
 int main() {
 
-    // ==========================================
-    // 1. ACCOUNT CREATION BLOCK (Uses Live System Clock)
-    // ==========================================
-    cout << "--- TEST 1: ACCOUNT CREATION (REGISTRATION) ---\n";
-    string regName, regPass, regEmail;
+cout << "==================================================\n";
+    cout << "     CYBER CAFE CENTRAL SYSTEM VALIDATION\n";
+    cout << "==================================================\n\n";
 
-    cout << "Choose a Username: ";
-    cin >> regName;
-    cout << "Choose a Password: ";
-    cin >> regPass;
-    cout << "Enter Email Address: ";
-    cin >> regEmail;
+    // ====================================================
+    // TEST 1: ADMIN REGISTRATION & AUTO-COLLISION GENERATION
+    // ====================================================
+    cout << "[TEST 1: ADMIN CREATION ENGINE]\n";
+    cout << "Registering admin1@cafe.com...\n";
+    adminControl.register_new_admin("admin1@cafe.com", "adminPass123");
 
-    // 💡 No more manual date input or strings! The backend pulls your PC clock automatically.
-    if (userControl.register_new_public_user(regName, regPass, regEmail)) {
-        cout << "Success: Account validated, unique ID computed, and live system date stamped!\n\n";
+    cout << "Registering admin2@cafe.com...\n";
+    adminControl.register_new_admin("admin2@cafe.com", "secureAdmin777");
+    cout << "👉 Check your admins.csv! Verify both got unique IDs between 1 and 1000.\n\n";
+
+    // ====================================================
+    // TEST 2: PUBLIC USER REGISTRATION & AUTO-SYSTEM DATE
+    // ====================================================
+    cout << "[TEST 2: PUBLIC USER ACCOUNT CREATION]\n";
+    string pubName, pubPass, pubEmail;
+    cout << "Enter a public account username to register: ";
+    cin >> pubName;
+    cout << "Enter account password: ";
+    cin >> pubPass;
+    cout << "Enter account email: ";
+    cin >> pubEmail;
+
+    if (userControl.register_new_public_user(pubName, pubPass, pubEmail)) {
+        cout << "👉 Success: Public profile appended at ID 1001+ with live calendar date stamp.\n\n";
     } else {
-        cout << "Failure: Registration failed.\n\n";
+        cout << "❌ Failure: Registration rejected.\n\n";
     }
 
-    // ==========================================
-    // 2. SEARCH BY ID BLOCK (Uses cin >>)
-    // ==========================================
-    cout << "--- TEST 2: SEARCH BY ID ---\n";
-    cout << "Enter an ID to look up: ";
-    int testId{};
-    cin >> testId;
+    // ====================================================
+    // TEST 3: COMPREHENSIVE SECURITY ROUTER (LOGIN GATE)
+    // ====================================================
+    cout << "[TEST 3: SYSTEM ROLE LOGIN VERIFICATION]\n";
+    cout << "Choose Login Type (1 = Admin Portal, 2 = Public User Portal): ";
+    int portalChoice;
+    cin >> portalChoice;
+    cin.ignore(); // Clears trailing newline buffer instantly
 
-    if (userControl.find_user_by_id(testId, matchingUser)) {
-        cout << "Success: Found " << matchingUser.userName << " | " << matchingUser.email << "\n\n";
+    if (portalChoice == 1) {
+        // --- ADMIN LOGIN GATEWAY ---
+        string admEmail, admPass;
+        cout << "\n--- ADMIN LOGIN PORTAL ---\n";
+        cout << "Enter Administrator Email: ";
+        getline(cin, admEmail);
+        cout << "Enter Administrator Password: ";
+        getline(cin, admPass);
+
+        AdminUser currentAdmin;
+        if (adminControl.authenticate_admin(admEmail, admPass, currentAdmin)) {
+            cout << "\n🟢 ACCESS GRANTED (ADMIN PANEL)\n";
+            cout << "Identity Token Verified: [ID: " << currentAdmin.adminId << "]\n";
+            cout << "System Status: Online & Secure\n\n";
+        } else {
+            cout << "\n🔴 ACCESS DENIED: Terminating portal link.\n\n";
+        }
+
+    } else if (portalChoice == 2) {
+        // --- PUBLIC USER LOGIN GATEWAY ---
+        string inputUser, inputPass;
+        cout << "\n--- PUBLIC CLIENT PORTAL ---\n";
+        cout << "Enter Client Username: ";
+        getline(cin, inputUser);
+        cout << "Enter Client Password: ";
+        getline(cin, inputPass);
+
+        PublicUser activeClient;
+        if (userControl.authenticate_user(inputUser, inputPass, activeClient)) {
+            cout << "\n🟢 ACCESS GRANTED (CLIENT TERMINAL)\n";
+            cout << "Welcome Back, " << activeClient.userName << "\n";
+            cout << "Account Email Link: " << activeClient.email << "\n";
+            cout << "Account Created On: " << activeClient.joiningDate << "\n";
+            cout << "Current Bill Owed: $" << activeClient.totalBill << "\n\n";
+        } else {
+            cout << "\n🔴 ACCESS DENIED: Invalid Client Match.\n\n";
+        }
+
     } else {
-        cout << "Failure: User not found.\n\n";
+        cout << "⚠️ Invalid choice. Exiting framework validation suite.\n";
     }
 
-    // ==========================================
-    // 3. SEARCH BY USERNAME BLOCK (Uses cin >>)
-    // ==========================================
-    cout << "--- TEST 3: SEARCH BY USERNAME ---\n";
-    cout << "Enter an exact username to look up: ";
-    string nameToSearch;
-    cin >> nameToSearch;
-
-    PublicUser nameMatchUser;
-    if (userControl.find_user_by_name(nameToSearch, nameMatchUser)) {
-        cout << "Success: Found ID " << nameMatchUser.uniqueId << " with Email: " << nameMatchUser.email << "\n\n";
-    } else {
-        cout << "Failure: Username not found.\n\n";
-    }
-
-    // ==========================================
-    // 4. DELETE BY ID BLOCK (Uses cin >>)
-    // ==========================================
-    cout << "--- TEST 4: DELETE RECORD ---\n";
-    cout << "Enter an ID to completely delete from CSV: ";
-    int idToDelete;
-    cin >> idToDelete;
-
-    if (userControl.remove_user_by_id(idToDelete)) {
-        cout << "Success: Record erased.\n\n";
-    } else {
-        cout << "failure\n\n";
-    }
-
-    // ==========================================
-    // 5. DISPLAY ALL RECORDS BLOCK
-    // ==========================================
-    cout << "--- TEST 5: PRINT CURRENT CSV STATE (EXCLUDING HEADER) ---\n";
+    // ====================================================
+    // TEST 4: CURRENT DATABASE MONITOR (EXCLUDING HEADERS)
+    // ====================================================
+    cout << "[TEST 4: RE-PRINTING ALL RECOGNIZED SYSTEM USERS]\n";
     userControl.print_all_users();
-    cout << "\n";
-
-    // ==========================================
-    // 6. AUTHENTICATION BLOCK (Uses getline)
-    // ==========================================
-    cout << "--- TEST 6: LOGIN VALIDATION ---\n";
-    string inputUserName, inputPassword;
-
-    // 💡 Crucial: Clears out '\n' left over by the last cin >> in Test 4
-    cin.ignore();
-
-    cout << "Enter Login Username: ";
-    getline(cin, inputUserName);
-
-    cout << "Enter Login Password: ";
-    getline(cin, inputPassword);
-
-    PublicUser activeUser;
-
-    if (userControl.authenticate_user(inputUserName, inputPassword, activeUser)) {
-        cout << "Auth Success! Welcome back, " << activeUser.email << "\n\n";
-
-        // ====================================================
-        // 7. MUTATION DEDICATED TESTS (Nested under login safety)
-        // ====================================================
-        cout << "--- TEST 7: ACCOUNT REFIELD MODIFICATIONS ---\n";
-
-        // Test A: Modify Username
-        cout << "Enter a NEW username for this account: ";
-        string freshName;
-        getline(cin, freshName);
-        userControl.update_username(activeUser.uniqueId, freshName);
-
-        // Test B: Modify Password
-        cout << "Enter a NEW password for this account: ";
-        string freshPass;
-        getline(cin, freshPass);
-        userControl.update_password(activeUser.uniqueId, freshPass);
-
-        // Test C: Modify Email
-        cout << "Enter a NEW email for this account: ";
-        string freshEmail;
-        getline(cin, freshEmail);
-        userControl.update_email(activeUser.uniqueId, freshEmail);
-
-        // Test D: Modify Financial Bill Balance
-        cout << "Enter a NEW bill balance amount (e.g., 45.50): ";
-        double freshBill;
-        cin >> freshBill;
-        userControl.update_total_bill(activeUser.uniqueId, freshBill);
-
-        // Final Sanity Verification Dump
-        cout << "\n--- FINAL VERIFICATION DUMP OF REWRITTEN CSV ---\n";
-        userControl.print_all_users();
-
-    } else {
-        cout << "Auth Failure: Skipping modification tests.\n";
-    }
+    cout << "\n==================================================\n";
+    cout << "        END OF FRAMEWORK SYSTEM TEST SUITE\n";
+    cout << "==================================================\n";
 }

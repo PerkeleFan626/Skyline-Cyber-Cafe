@@ -3,8 +3,8 @@
 #include <string>
 using namespace std;
 
-// struct AdminUser {
-//     int adminId{};
-//     string
-//
-// };
+struct AdminUser {
+    int adminId{};
+    string email;
+    string password;
+};
