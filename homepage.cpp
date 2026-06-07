@@ -95,6 +95,7 @@ void showRegistrationScreen() {
     std::cout << "\033[36m==========================================================================\n";
     std::cout << "         SKYLINE CYBER CAFE - NEW USER REGISTRATION\n";
     std::cout << "==========================================================================\033[0m\n\n";
+    std::cout << "  (Type 'exit' at any time to cancel)\n\n";
 
     std::string userName;
     std::string email;
@@ -104,9 +105,11 @@ void showRegistrationScreen() {
 
     std::cout << "  Enter your name     : ";
     std::getline(std::cin, userName);
+    if (userName == "exit") return;
 
     std::cout << "  Enter your email    : ";
     std::getline(std::cin, email);
+    if (email == "exit") return;
 
     if (email.find('@') == std::string::npos || email.find('.') == std::string::npos) {
         std::cout << "\n  Invalid email address!\n";
@@ -117,13 +120,9 @@ void showRegistrationScreen() {
 
     std::cout << "  Enter your password : ";
     std::getline(std::cin, password);
+    if (password == "exit") return;
 
-    // Password validation
-    bool hasUpper = false;
-    bool hasLower = false;
-    bool hasDigit = false;
-    bool hasSymbol = false;
-
+    bool hasUpper = false, hasLower = false, hasDigit = false, hasSymbol = false;
     for (char c : password) {
         if (isupper(c)) hasUpper = true;
         if (islower(c)) hasLower = true;
@@ -173,12 +172,13 @@ void showRegistrationScreen() {
     std::cout << "\n  Press Enter to return...";
     std::cin.get();
 }
+
 void showLoginScreen() {
     clearScreen();
     std::cout << "\033[36m==========================================================================\n";
     std::cout << "         SKYLINE CYBER CAFE - CUSTOMER LOGIN PORTAL\n";
     std::cout << "==========================================================================\033[0m\n\n";
-
+    std::cout << "  (Type 'exit' at any time to cancel)\n\n";
 
     std::string password;
     std::string userName;
@@ -186,22 +186,42 @@ void showLoginScreen() {
 
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    std::cout << "  Enter your username    : ";
-    std::getline(std::cin, userName);
+    while (true) {
+        std::cout << "  Enter your username : ";
+        std::getline(std::cin, userName);
+        if (userName == "exit") return;
+        if (userName.empty()) {
+            std::cout << "\n  Username cannot be empty!\n";
+            continue;
+        }
 
-    std::cout << "  Enter your password : ";
-    std::getline(std::cin, password);
+        std::cout << "  Enter your password : ";
+        std::getline(std::cin, password);
+        if (password == "exit") return;
+        if (password.empty()) {
+            std::cout << "\n  Password cannot be empty!\n";
+            continue;
+        }
+        if (password.length() < 8) {
+            std::cout << "\n  Password must be at least 8 characters!\n";
+            continue;
+        }
 
-    bool success = userControl.authenticate_user(userName, password, loggedInUser);
 
-    if (success) {
-        std::cout << "\n  Welcome back, " << loggedInUser.userName << "!\n";
-    } else {
-        std::cout << "\n  Invalid email or password. Please try again.\n";
+        bool success = userControl.authenticate_user(userName, password, loggedInUser);
+
+        if (success) {
+            std::cout << "\n  Welcome back, " << loggedInUser.userName << "!\n";
+            std::cin.get();
+            return;
+        } else {
+            std::cout << "\n  Invalid username or password.\n";
+            std::cout << "  Type 'back' to return to menu or press Enter to try again: ";
+            std::string retry;
+            std::getline(std::cin, retry);
+            if (retry == "back") return;
+        }
     }
-
-    std::cout << "\n  Press Enter to return...";
-    std::cin.get();
 }
 
 void showAdminScreen() {
