@@ -38,7 +38,7 @@ void DataManager::bootstrap_files() {
     if (!filesystem::exists(admin_file)) {
         ofstream f(admin_file);
         if (f.is_open()) {
-            f << "email,password\n";
+            f << "adminId,email,password\n";
             f.close();
         }
     }
@@ -154,4 +154,51 @@ bool DataManager::rewrite_public_users(const vector<PublicUser>& users) {
         return true;
     }
     return false;
+}
+
+// ============================================================================
+// 4. ADMIN USER OPERATIONS (CRUD)
+// ============================================================================
+
+bool DataManager::add_admin(const AdminUser& admin) {
+    ofstream f(admin_file, ios::app);
+
+    if (f.is_open()) {
+        f << admin.adminId << ","
+          << admin.email << ","
+          << admin.password << "\n";
+        f.close();
+        return true;
+    }
+
+    return false;
+}
+
+vector<AdminUser> DataManager::get_all_admins()
+{
+    vector<AdminUser> admins{};
+    ifstream f(admin_file);
+    string line;
+
+    if (f.is_open()) {
+        getline(f, line);
+
+        while (getline(f, line)) {
+            if (line.empty()) continue;
+
+            vector<string> tokens = split_csv_line(line);
+
+            if (tokens.size() == 3) {
+                AdminUser admin;
+                admin.adminId = stoi(trim(tokens[0]));
+                admin.email = trim(tokens[1]);
+                admin.password = trim(tokens[2]);
+
+                admins.push_back(admin);
+            }
+
+        }
+        f.close();
+    }
+    return admins;
 }

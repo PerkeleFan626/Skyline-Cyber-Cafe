@@ -8,11 +8,12 @@ add_executable(Cafe main.cpp
         homepage.hpp
         homepage.cpp
         DataManager/DataManagerStructs.h
-        DataManager/DataManagerStructs.h
         DataManager/DataManager.h
-        DataManager/DataManager.cpp
         DataManager/DataManager.cpp
         UserManager/UserManager.h
         UserManager/UserManager.cpp
         Globals/CallingClassGlobal.h
-        Globals/Globals.h)
+        Globals/Globals.h
+        AdminManager/AdminStruct.h
+        AdminManager/AdminManager.h
+        AdminManager/AdminManager.cpp)
