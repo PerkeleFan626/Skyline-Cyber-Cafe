@@ -6,7 +6,7 @@ int main() {
     bool running = true;
 
     while (running) {
-        displayAnimatedHomepage(); // 1. Draw the home menu frame
+        displayAnimatedHomepage(); //
 
         // 2. Safe input validation
         if (!(std::cin >> choice)) {
