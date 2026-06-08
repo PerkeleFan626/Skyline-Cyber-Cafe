@@ -16,4 +16,8 @@ add_executable(Cafe main.cpp
         Globals/Globals.h
         AdminManager/AdminStruct.h
         AdminManager/AdminManager.h
-        AdminManager/AdminManager.cpp)
+        AdminManager/AdminManager.cpp
+        TransactionManager/TransactionManager.h
+        TransactionManager/TransactionManager.cpp
+        SessionManager/SessionManager.h
+        SessionManager/SessionManager.cpp)

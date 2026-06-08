@@ -1,2 +1,3 @@
-1001,jak,Jack@123,jak@gmail.com,05-06-2026,0
-1002,john,John123!,john@gmail.com,05-06-2026,0
+uniqueId,userName,password,email,joiningDate,totalBill
+1001,AliceGaming27,password99,alice@gmail.com,08-06-2026,28
+1002,Hejsan,Tjena,absolut,08-06-2026,0

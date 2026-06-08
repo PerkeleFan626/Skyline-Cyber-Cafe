@@ -25,3 +25,20 @@ struct Admin {
     string email{};
     string password{};
 };
+
+struct TransactionRecord {
+    int userId = 0;
+    double internetPaid = 0.0;
+    double gamingPaid = 0.0;
+    double printsPaid = 0.0;
+    double scansPaid = 0.0;
+    double totalPaid = 0.0;
+};
+
+struct UserSession {
+    int userId = 0;
+    int internetMinutes = 0;
+    int gamingMinutes = 0;
+    int printsCount = 0;
+    int scansCount = 0;
+};
