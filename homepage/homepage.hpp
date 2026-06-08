@@ -2,8 +2,8 @@
 #define HOMEPAGE_HPP
 
 #include <string>
+#include "../DataManager/DataManager.h"
 
-// Global UI Layout Tools
 void clearScreen();
 void printCentered(const std::string& text, int width);
 void displayAnimatedHomepage();
@@ -12,5 +12,6 @@ void displayAnimatedHomepage();
 void showRegistrationScreen();
 void showLoginScreen();
 void showAdminScreen();
+void showAdminDashboard(AdminUser& loggedInAdmin);
 
 #endif

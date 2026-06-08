@@ -5,8 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 
 add_executable(Cafe main.cpp
-        homepage.hpp
-        homepage.cpp
+        homepage/homepage.hpp
+        homepage/homepage.cpp
         DataManager/DataManagerStructs.h
         DataManager/DataManager.h
         DataManager/DataManager.cpp

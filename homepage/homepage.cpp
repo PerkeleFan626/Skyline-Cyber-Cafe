@@ -4,10 +4,12 @@
 #include <thread> // Used for timing the animation
 #include <chrono> // Used for milliseconds definitions
 #include "homepage.hpp"
-#include "UserManager/UserManager.h"
-#include "Globals/Globals.h"
+#include "../UserManager/UserManager.h"
+#include "../Globals/Globals.h"
+#include "../AdminManager/AdminManager.h"
 DataManager dbManager;
 UserManager userControl(dbManager);
+AdminManager adminControl(dbManager);
 
 // Console Width Canvas definition to ensure perfect centering alignment
 const int CONSOLE_WIDTH = 80;
@@ -227,12 +229,107 @@ void showLoginScreen() {
 void showAdminScreen() {
     clearScreen();
     std::cout << "\033[31m==========================================================================\n";
-    std::cout << "         SKYLINE CYBER CAFE - SECURE STAFF PORTAL\n";
+    std::cout << "         SKYLINE CYBER CAFE - ADMIN LOGIN\n";
     std::cout << "==========================================================================\033[0m\n\n";
+    std::cout << "  (Type 'exit' at any time to cancel)\n\n";
 
-    std::cout << "  [CRITICAL]: Authorized Personnel Only.\n\n";
+    std::string email;
+    std::string password;
+    AdminUser loggedInAdmin;
 
-    std::cout << "  Press Enter to return to the homepage...";
-    std::cin.ignore(1000, '\n');
-    std::cin.get();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    while (true) {
+        std::cout << "  Enter admin email    : ";
+        std::getline(std::cin, email);
+        if (email == "exit") return;
+
+        std::cout << "  Enter admin password : ";
+        std::getline(std::cin, password);
+        if (password == "exit") return;
+
+        bool success = adminControl.authenticate_admin(email, password, loggedInAdmin);
+
+        if (success) {
+            std::cout << "\n  Welcome, Admin! ID: " << loggedInAdmin.adminId <<"\n  Press enter to continue to the dashboard "<< "\n";
+            std::cin.get();
+            showAdminDashboard(loggedInAdmin);
+            return;
+        } else {
+            std::cout << "  Type 'back' to return or press Enter to try again: ";
+            std::string retry;
+            std::getline(std::cin, retry);
+            if (retry == "back") return;
+        }
+    }
+}
+void showAdminDashboard(AdminUser& loggedInAdmin) {
+    while (true) {
+        clearScreen();
+        std::cout << "\033[31m==========================================================================\n";
+        std::cout << "         SKYLINE CYBER CAFE - ADMIN DASHBOARD\n";
+        std::cout << "         Welcome, Admin ID: " << loggedInAdmin.adminId << "\n";
+        std::cout << "==========================================================================\033[0m\n\n";
+
+        std::cout << "  \033[31m[1]\033[0m View All Users\n";
+        std::cout << "  \033[31m[2]\033[0m Edit a User\n";
+        std::cout << "  \033[31m[3]\033[0m Delete a User\n";
+        std::cout << "  \033[31m[4]\033[0m View All Usernames\n";
+        std::cout << "  \033[31m[5]\033[0m Total Time All Users\n";
+        std::cout << "  \033[31m[6]\033[0m Total Prints & Scans Value\n";
+        std::cout << "  \033[31m[7]\033[0m View User Sessions\n";
+        std::cout << "  \033[31m[0]\033[0m Logout\n\n";
+
+        std::cout << "\033[31m==========================================================================\033[0m\n\n";
+
+        int choice;
+        std::cout << "  Choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                std::cout << "\n  [Coming soon - View All Users]\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            case 2:
+                std::cout << "\n  [Coming soon - Edit a User]\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            case 3:
+                std::cout << "\n  [Coming soon - Delete a User]\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            case 4:
+                std::cout << "\n  [Coming soon - View All Usernames]\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            case 5:
+                std::cout << "\n  [Coming soon - Total Time All Users]\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            case 6:
+                std::cout << "\n  [Coming soon - Total Prints & Scans]\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            case 7:
+                std::cout << "\n  [Coming soon - View User Sessions]\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            case 0:
+                std::cout << "\n  Logging out of admin panel...\n";
+                return;
+            default:
+                std::cout << "\n  Invalid option.\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+        }
+    }
 }
