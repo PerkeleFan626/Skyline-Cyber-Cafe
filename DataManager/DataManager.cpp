@@ -277,11 +277,9 @@ bool DataManager::remove_active_session(int userId) {
     ofstream f(session_file, ios::trunc);
 
     if (f.is_open()) {
-        // Rewrite the header
         f << "userId,internetMinutes,gamingMinutes,printsCount,scansCount\n";
 
         for (const auto& session : sessions) {
-            // Write everyone BACK to the file EXCEPT the user who is checking out
             if (session.userId != userId) {
                 f << session.userId << ","
                   << session.internetMinutes << ","
