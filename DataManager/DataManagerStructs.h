@@ -42,3 +42,10 @@ struct UserSession {
     int printsCount = 0;
     int scansCount = 0;
 };
+
+struct UserCompleteAudit {
+    PublicUser profile;
+    UserSession activeSession;
+    bool hasActiveSession = false;
+    std::vector<TransactionRecord> paymentHistory;
+};

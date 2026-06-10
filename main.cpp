@@ -4,7 +4,7 @@
 
 using namespace std;
 
-// Quick helper to print a clean menu divider
+// Quick helper to print a clean menu visual boundary line
 void printDivider() {
     cout << "--------------------------------------------------------\n";
 }
@@ -16,31 +16,34 @@ int main() {
         cout << "========================================================\n";
         cout << "         CYBER CAFE CENTRAL INTERACTIVE FRAMEWORK        \n";
         cout << "========================================================\n";
-        cout << " 1. [ADMIN] Register a New Administrator\n";
+        cout << " 1. [ADMIN] Register a New Administrator Account\n";
         cout << " 2. [CLIENT] Register a New Public User Account\n";
         cout << " 3. [TERMINAL] Start Live Terminal Session (Login User)\n";
         cout << " 4. [TERMINAL] Simulate Live Activity (Add Mins/Prints/Scans)\n";
         cout << " 5. [TERMINAL] End Session & Execute Financial Checkout\n";
-        cout << " 6. [EXIT] Shutdown System\n";
+        cout << " 6. [ADMIN] Run Deep Audit Lookup Dashboard (User History)\n";
+        cout << " 7. [EXIT] Shutdown System\n";
         printDivider();
-        cout << "Enter selection (1-6): ";
+        cout << "Enter selection (1-7): ";
 
+        // Safety check to handle accidental text inputs gracefully instead of looping forever
         if (!(cin >> mainChoice)) {
-            cout << "⚠️ Invalid selection. Please enter a number.\n";
+            cout << "⚠️ Invalid selection. Please enter a valid number configuration.\n";
             cin.clear();
             cin.ignore(10000, '\n');
             continue;
         }
-        cin.ignore(10000, '\n'); // Clear line buffer
+        cin.ignore(10000, '\n'); // Clear line buffer memory
 
-        if (mainChoice == 6) {
-            cout << "\nShutting down Cyber Cafe Core Engines. Goodbye!\n";
+        // System Break Condition
+        if (mainChoice == 7) {
+            cout << "\nShutting down Cyber Cafe Core Engines. Safe travels!\n";
             break;
         }
 
         switch (mainChoice) {
             case 1: {
-                // 1. ADMIN REGISTRATION
+                // 1. ADMIN REGISTRATION ENGINE
                 string admEmail, admPass;
                 cout << "\n--- [ADMIN PORTAL] CREATE MANAGER ACCOUNT ---\n";
                 cout << "Enter New Admin Email: ";
@@ -51,13 +54,13 @@ int main() {
                 if (adminControl.register_new_admin(admEmail, admPass)) {
                     cout << "👉 Success: Admin account saved. Check your admins.csv file!\n";
                 } else {
-                    cout << "❌ Error: Failed to add admin to tracking records.\n";
+                    cout << "❌ Error: Failed to append admin to storage records.\n";
                 }
                 break;
             }
 
             case 2: {
-                // 2. CLIENT REGISTRATION
+                // 2. CLIENT REGISTRATION ENGINE
                 string pubUser, pubPass, pubEmail;
                 cout << "\n--- [CLIENT PORTAL] REGISTER NEW PROFILE ---\n";
                 cout << "Enter Account Username: ";
@@ -68,8 +71,8 @@ int main() {
                 getline(cin, pubEmail);
 
                 if (userControl.register_new_public_user(pubUser, pubPass, pubEmail)) {
-                    cout << "👉 Success: User registration complete (ID sequence: 1001+).\n";
-                    cout << "Check public_users.csv to view their starting balance of $0.00.\n";
+                    cout << "👉 Success: User registration complete (IDs auto-start at 1001).\n";
+                    cout << "Check public_users.csv to view their baseline entry profile.\n";
                 } else {
                     cout << "❌ Error: Public account registration rejected.\n";
                 }
@@ -77,26 +80,26 @@ int main() {
             }
 
             case 3: {
-                // 3. START SESSION
+                // 3. START TERMINAL SESSION LAYER
                 int targetId;
                 cout << "\n--- [TERMINAL GATEWAY] ACTIVATING COMPUTER DESK ---\n";
                 cout << "Enter the User ID logging in (e.g., 1001): ";
                 cin >> targetId;
 
-                // Fire the SessionManager to provision a live un-billed tracking row
+                // Spawns an unbilled running tally spreadsheet row initialized to 0
                 if (sessionControl.start_new_session(targetId)) {
-                    cout << "👉 Open sessions.csv! You will see an active row initialized to 0s.\n";
+                    cout << "👉 Open sessions.csv! You will see an active tracking block active.\n";
                 }
                 break;
             }
 
             case 4: {
-                // 4. SIMULATE ACTIVITY
+                // 4. INJECT RUNNING TERMINAL ACTIVITY FOOTPRINTS
                 int targetId;
                 int incInternet, incGaming, incPrints, incScans;
 
-                cout << "\n--- [TERMINAL DESK] SIMULATING DESKTOP footprints ---\n";
-                cout << "Enter User ID currently sitting at terminal: ";
+                cout << "\n--- [TERMINAL DESK] SIMULATING DESKTOP OPERATIONS ---\n";
+                cout << "Enter User ID currently occupying terminal: ";
                 cin >> targetId;
                 cout << "Add Internet Minutes used: ";
                 cin >> incInternet;
@@ -107,33 +110,42 @@ int main() {
                 cout << "Add Documents Scanned:     ";
                 cin >> incScans;
 
-                // Inject tracking modifications straight into sessions.csv
+                // Mutates metrics dynamically on disk inside sessions.csv
                 if (sessionControl.simulate_activity(targetId, incInternet, incGaming, incPrints, incScans)) {
-                    cout << "👉 Check sessions.csv! The counts for User " << targetId << " have increased.\n";
+                    cout << "👉 Check sessions.csv! The counts for User " << targetId << " have updated.\n";
                 }
                 break;
             }
 
             case 5: {
-                // 5. CHECKOUT AND ACCOUNTING COMMIT
+                // 5. TERMINATE LIVE MONITORING & RESOLVE BILL LEDGER
                 int targetId;
-                cout << "\n--- [FRONT DESK checkout TERMINAL] ---\n";
+                cout << "\n--- [FRONT DESK CHECKOUT TERMINAL] ---\n";
                 cout << "Enter checking out User ID: ";
                 cin >> targetId;
 
                 cout << "Executing cross-file verification logic pipeline...\n";
-                // Ends the session, calculates costs, writes user_history.csv, updates public_users.csv
+                // Collects session numbers, converts to money, logs receipt, clears terminal sheet
                 if (sessionControl.end_and_checkout_session(targetId)) {
-                    cout << "👉 Database Synchronization Complete:\n";
-                    cout << "   1. A receipt line was written into user_history.csv\n";
-                    cout << "   2. The user's lifetime totalBill was updated in public_users.csv\n";
-                    cout << "   3. The active terminal row was scrubbed completely from sessions.csv\n";
+                    cout << "🟢 Database Synchronization Complete! Files updated successfully.\n";
                 }
                 break;
             }
 
+            case 6: {
+                // 6. ADMINISTRATIVE CROSS-FILE MASTER DOSSIER LOOKUP
+                int lookupId;
+                cout << "\n--- [SECURITY CONSOLE] MASTER DOSSIER AUDIT INTERFACE ---\n";
+                cout << "Enter target Customer User ID to inspect (e.g., 1001): ";
+                cin >> lookupId;
+
+                // Fire our new Detective Engine to read all CSVs and print the full summary!
+                adminControl.print_user_audit_dashboard(lookupId);
+                break;
+            }
+
             default:
-                cout << "⚠️ Choice out of structural alignment bounds. Choose 1-6.\n";
+                cout << "⚠️ Selection outside core bounds. Please choose a value from 1 to 7.\n";
                 break;
         }
         cout << "\n";
