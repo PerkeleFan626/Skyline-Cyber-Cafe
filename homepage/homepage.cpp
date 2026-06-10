@@ -214,9 +214,9 @@ void showLoginScreen() {
 
         if (success) {
             std::cout << "\n  Welcome back, " << loggedInUser.userName << "!\n";
-            std::cin.get();
+            showUserDashboard(loggedInUser);
             return;
-        } else {
+        }         else {
             std::cout << "\n  Invalid username or password.\n";
             std::cout << "  Type 'back' to return to menu or press Enter to try again: ";
             std::string retry;
@@ -288,40 +288,179 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
 
         switch (choice) {
             case 1:
-                std::cout << "\n  [Coming soon - View All Users]\n";
+                userControl.print_all_users();
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
-            case 2:
-                std::cout << "\n  [Coming soon - Edit a User]\n";
+            case 2: {
+                clearScreen();
+                std::cout << "\033[31m==========================================================================\n";
+                std::cout << "         EDIT A USER\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                userControl.print_all_users();
+
+                std::cout << "\n  Enter User ID to edit: ";
+                int editId;
+                std::cin >> editId;
+                std::cin.ignore(1000, '\n');
+
+                std::cout << "\n  What do you want to edit?\n";
+                std::cout << "  [1] Username\n";
+                std::cout << "  [2] Email\n";
+                std::cout << "  [3] Password\n";
+                std::cout << "\n  Choice: ";
+                int editChoice;
+                std::cin >> editChoice;
+                std::cin.ignore(1000, '\n');
+
+                std::string newValue;
+
+                if (editChoice == 1) {
+                    std::cout << "  New username: ";
+                    std::getline(std::cin, newValue);
+                    userControl.update_username(editId, newValue);
+                    std::cout << "\n  Username updated!\n";
+                } else if (editChoice == 2) {
+                    std::cout << "  New email: ";
+                    std::getline(std::cin, newValue);
+                    userControl.update_email(editId, newValue);
+                    std::cout << "\n  Email updated!\n";
+                } else if (editChoice == 3) {
+                    std::cout << "  New password: ";
+                    std::getline(std::cin, newValue);
+                    userControl.update_password(editId, newValue);
+                    std::cout << "\n  Password updated!\n";
+                } else {
+                    std::cout << "\n  Invalid choice.\n";
+                }
+
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
-            case 3:
-                std::cout << "\n  [Coming soon - Delete a User]\n";
+            }
+
+            case 3: {
+                clearScreen();
+                std::cout << "\033[31m==========================================================================\n";
+                std::cout << "         DELETE A USER\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                userControl.print_all_users();
+
+                std::cout << "\n  Enter User ID to delete: ";
+                int deleteId;
+                std::cin >> deleteId;
+
+                bool deleted = userControl.remove_user_by_id(deleteId);
+
+                if (deleted) {
+                    std::cout << "\n  User deleted successfully!\n";
+                } else {
+                    std::cout << "\n  User not found.\n";
+                }
+
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
-            case 4:
-                std::cout << "\n  [Coming soon - View All Usernames]\n";
+            }
+            case 4: {
+                clearScreen();
+                std::cout << "\033[31m==========================================================================\n";
+                std::cout << "         ALL USERNAMES\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                vector<PublicUser> allUsers = dbManager.get_all_public_users();
+
+                if (allUsers.empty()) {
+                    std::cout << "  No users registered yet.\n";
+                } else {
+                    for (const auto& user : allUsers) {
+                        std::cout << "  [" << user.uniqueId << "] " << user.userName << "\n";
+                    }
+                }
+
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
-            case 5:
-                std::cout << "\n  [Coming soon - Total Time All Users]\n";
+            }
+            case 5: {
+                clearScreen();
+                std::cout << "\033[31m==========================================================================\n";
+                std::cout << "         TOTAL TIME ALL USERS\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                vector<UserSession> allSessions = dbManager.get_all_sessions();
+                int totalInternet = 0;
+                int totalGaming = 0;
+
+                for (const auto& session : allSessions) {
+                    totalInternet += session.internetMinutes;
+                    totalGaming += session.gamingMinutes;
+                }
+
+                std::cout << "  Total Internet Time : " << totalInternet << " minutes\n";
+                std::cout << "  Total Gaming Time   : " << totalGaming << " minutes\n";
+                std::cout << "  Total Combined      : " << totalInternet + totalGaming << " minutes\n";
+
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
-            case 6:
-                std::cout << "\n  [Coming soon - Total Prints & Scans]\n";
+            }
+
+            case 6: {
+                clearScreen();
+                std::cout << "\033[31m==========================================================================\n";
+                std::cout << "         TOTAL PRINTS & SCANS VALUE\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                vector<UserSession> allSessions = dbManager.get_all_sessions();
+                int totalPrints = 0;
+                int totalScans = 0;
+
+                for (const auto& session : allSessions) {
+                    totalPrints += session.printsCount;
+                    totalScans += session.scansCount;
+                }
+
+                double printValue = totalPrints * 0.20;
+                double scanValue = totalScans * 0.50;
+
+                std::cout << "  Total Pages Printed : " << totalPrints << " ($" << printValue << ")\n";
+                std::cout << "  Total Pages Scanned : " << totalScans << " ($" << scanValue << ")\n";
+                std::cout << "  Total Value         : $" << printValue + scanValue << "\n";
+
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
-            case 7:
-                std::cout << "\n  [Coming soon - View User Sessions]\n";
+            }
+
+
+            case 7: {
+                clearScreen();
+                std::cout << "\033[31m==========================================================================\n";
+                std::cout << "         USER SESSIONS\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                vector<UserSession> allSessions = dbManager.get_all_sessions();
+
+                if (allSessions.empty()) {
+                    std::cout << "  No active sessions found.\n";
+                } else {
+                    for (const auto& session : allSessions) {
+                        std::cout << "  User ID        : " << session.userId << "\n";
+                        std::cout << "  Internet Time  : " << session.internetMinutes << " minutes\n";
+                        std::cout << "  Gaming Time    : " << session.gamingMinutes << " minutes\n";
+                        std::cout << "  Prints         : " << session.printsCount << "\n";
+                        std::cout << "  Scans          : " << session.scansCount << "\n";
+                        std::cout << "  ------------------------------------------\n";
+                    }
+                }
+
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
+            }
             case 0:
                 std::cout << "\n  Logging out of admin panel...\n";
                 return;
@@ -332,4 +471,127 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 break;
         }
     }
+}
+void showUserDashboard(PublicUser& loggedInUser) {
+    while (true) {
+        clearScreen();
+        std::cout << "\033[36m==========================================================================\n";
+        std::cout << "         SKYLINE CYBER CAFE - USER DASHBOARD\n";
+        std::cout << "         Welcome, " << loggedInUser.userName << "!\n";
+        std::cout << "==========================================================================\033[0m\n\n";
+
+        std::cout << "  \033[36m[1]\033[0m Start Session\n";
+        std::cout << "  \033[36m[2]\033[0m View My Sessions\n";
+        std::cout << "  \033[36m[3]\033[0m View My Bill\n";
+        std::cout << "  \033[36m[4]\033[0m View Price Plans\n";
+        std::cout << "  \033[36m[5]\033[0m Edit My Profile\n";
+        std::cout << "  \033[36m[0]\033[0m Logout\n\n";
+
+        std::cout << "\033[36m==========================================================================\033[0m\n\n";
+
+        int choice;
+        std::cout << "  Choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                std::cout << "\n  [Coming soon - Start Session]\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            case 2:
+                std::cout << "\n  [Coming soon - View My Sessions]\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            case 3:
+                std::cout << "\n  [Coming soon - View My Bill]\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+
+            case 4:
+                showPricePlans();
+                break;
+            case 5:
+                showEditProfile(loggedInUser);
+                break;
+
+            case 0:
+                std::cout << "\n  Goodbye, " << loggedInUser.userName << "! See you soon.\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                return;
+            default:
+                std::cout << "\n  Invalid option.\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+        }
+    }
+}
+
+void showPricePlans() {
+    clearScreen();
+    std::cout << "\033[36m==========================================================================\n";
+    std::cout << "         SKYLINE CYBER CAFE - PRICE PLANS\n";
+    std::cout << "==========================================================================\033[0m\n\n";
+
+    std::cout << "  BROWSING\n";
+    std::cout << "  --------\n";
+    std::cout << "  $3.00 per hour\n\n";
+
+    std::cout << "  PRINTING\n";
+    std::cout << "  --------\n";
+    std::cout << "  $0.20 per page\n\n";
+
+    std::cout << "  SCANNING\n";
+    std::cout << "  --------\n";
+    std::cout << "  $0.50 per page\n\n";
+
+    std::cout << "\033[36m==========================================================================\033[0m\n";
+    std::cout << "\n  Press Enter to return...";
+    std::cin.ignore(1000, '\n');
+    std::cin.get();
+}
+
+void showEditProfile(PublicUser& loggedInUser) {
+    clearScreen();
+    std::cout << "\033[36m==========================================================================\n";
+    std::cout << "         SKYLINE CYBER CAFE - EDIT PROFILE\n";
+    std::cout << "==========================================================================\033[0m\n\n";
+    std::cout << "  (Type 'exit' to cancel)\n\n";
+
+    std::cout << "  Current username : " << loggedInUser.userName << "\n";
+    std::cout << "  Current email    : " << loggedInUser.email << "\n\n";
+
+    std::string newName;
+    std::string newEmail;
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    std::cout << "  New username (Enter to keep current): ";
+    std::getline(std::cin, newName);
+    if (newName == "exit") return;
+
+    std::cout << "  New email (Enter to keep current): ";
+    std::getline(std::cin, newEmail);
+    if (newEmail == "exit") return;
+
+    if (!newName.empty()) {
+        userControl.update_username(loggedInUser.uniqueId, newName);
+        loggedInUser.userName = newName;
+    }
+    if (!newEmail.empty()) {
+        if (newEmail.find('@') == std::string::npos || newEmail.find('.') == std::string::npos) {
+            std::cout << "\n  Invalid email address!\n";
+        } else {
+            userControl.update_email(loggedInUser.uniqueId, newEmail);
+            loggedInUser.email = newEmail;
+        }
+    }
+
+    std::cout << "\n  Profile updated successfully!\n";
+    std::cout << "\n  Press Enter to return...";
+    std::cin.get();
 }

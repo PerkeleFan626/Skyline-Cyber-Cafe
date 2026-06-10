@@ -13,5 +13,9 @@ void showRegistrationScreen();
 void showLoginScreen();
 void showAdminScreen();
 void showAdminDashboard(AdminUser& loggedInAdmin);
+void showUserDashboard(PublicUser& loggedInUser);
+void showPricePlans();
+void showEditProfile(PublicUser& loggedInUser);
+
 
 #endif
