@@ -251,8 +251,7 @@ void showAdminScreen() {
         bool success = adminControl.authenticate_admin(email, password, loggedInAdmin);
 
         if (success) {
-            std::cout << "\n  Welcome, Admin! ID: " << loggedInAdmin.adminId <<"\n  Press enter to continue to the dashboard "<< "\n";
-            std::cin.get();
+            std::cout << "\n  Welcome, Admin! ID: " << loggedInAdmin.adminId << "\n";
             showAdminDashboard(loggedInAdmin);
             return;
         } else {
@@ -271,16 +270,16 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
         std::cout << "         Welcome, Admin ID: " << loggedInAdmin.adminId << "\n";
         std::cout << "==========================================================================\033[0m\n\n";
 
-        std::cout << "  \033[31m[1]\033[0m View All Users\n";
-        std::cout << "  \033[31m[2]\033[0m Edit a User\n";
-        std::cout << "  \033[31m[3]\033[0m Delete a User\n";
-        std::cout << "  \033[31m[4]\033[0m View All Usernames\n";
-        std::cout << "  \033[31m[5]\033[0m Total Time All Users\n";
-        std::cout << "  \033[31m[6]\033[0m Total Prints & Scans Value\n";
-        std::cout << "  \033[31m[7]\033[0m View User Sessions\n";
-        std::cout << "  \033[31m[0]\033[0m Logout\n\n";
+        std::cout << "  \033[36m[1]\033[0m View All Users\n";
+        std::cout << "  \033[36m[2]\033[0m Edit a User\n";
+        std::cout << "  \033[36m[3]\033[0m Delete a User\n";
+        std::cout << "  \033[36m[4]\033[0m View All Usernames\n";
+        std::cout << "  \033[36m[5]\033[0m Full User Audit\n";
+        std::cout << "  \033[36m[6]\033[0m View Active Sessions\n";
+        std::cout << "  \033[36m[0]\033[0m Logout\n\n";
 
-        std::cout << "\033[31m==========================================================================\033[0m\n\n";
+        std::cout << "\033[36m==========================================================================\033[0m\n\n";
+        std::cout << std::flush;
 
         int choice;
         std::cout << "  Choice: ";
@@ -384,24 +383,21 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 std::cin.get();
                 break;
             }
+
+
             case 5: {
                 clearScreen();
                 std::cout << "\033[31m==========================================================================\n";
-                std::cout << "         TOTAL TIME ALL USERS\n";
+                std::cout << "         FULL USER AUDIT\n";
                 std::cout << "==========================================================================\033[0m\n\n";
 
-                vector<UserSession> allSessions = dbManager.get_all_sessions();
-                int totalInternet = 0;
-                int totalGaming = 0;
+                userControl.print_all_users();
 
-                for (const auto& session : allSessions) {
-                    totalInternet += session.internetMinutes;
-                    totalGaming += session.gamingMinutes;
-                }
+                std::cout << "\n  Enter User ID to audit: ";
+                int auditId;
+                std::cin >> auditId;
 
-                std::cout << "  Total Internet Time : " << totalInternet << " minutes\n";
-                std::cout << "  Total Gaming Time   : " << totalGaming << " minutes\n";
-                std::cout << "  Total Combined      : " << totalInternet + totalGaming << " minutes\n";
+                adminControl.print_user_audit_dashboard(auditId);
 
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
@@ -409,34 +405,6 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
             }
 
             case 6: {
-                clearScreen();
-                std::cout << "\033[31m==========================================================================\n";
-                std::cout << "         TOTAL PRINTS & SCANS VALUE\n";
-                std::cout << "==========================================================================\033[0m\n\n";
-
-                vector<UserSession> allSessions = dbManager.get_all_sessions();
-                int totalPrints = 0;
-                int totalScans = 0;
-
-                for (const auto& session : allSessions) {
-                    totalPrints += session.printsCount;
-                    totalScans += session.scansCount;
-                }
-
-                double printValue = totalPrints * 0.20;
-                double scanValue = totalScans * 0.50;
-
-                std::cout << "  Total Pages Printed : " << totalPrints << " ($" << printValue << ")\n";
-                std::cout << "  Total Pages Scanned : " << totalScans << " ($" << scanValue << ")\n";
-                std::cout << "  Total Value         : $" << printValue + scanValue << "\n";
-
-                std::cin.ignore(1000, '\n');
-                std::cin.get();
-                break;
-            }
-
-
-            case 7: {
                 clearScreen();
                 std::cout << "\033[31m==========================================================================\n";
                 std::cout << "         USER SESSIONS\n";
