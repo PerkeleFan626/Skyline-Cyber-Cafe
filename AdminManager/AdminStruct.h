@@ -5,6 +5,6 @@ using namespace std;
 
 struct AdminUser {
     int adminId{};
-    string email;
+    string userName;
     string password;
 };
