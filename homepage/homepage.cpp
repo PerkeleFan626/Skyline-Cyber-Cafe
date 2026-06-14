@@ -7,9 +7,13 @@
 #include "../UserManager/UserManager.h"
 #include "../Globals/Globals.h"
 #include "../AdminManager/AdminManager.h"
+#include "../TransactionManager/TransactionManager.h"
+#include "../SessionManager/SessionManager.h"
 DataManager dbManager;
 UserManager userControl(dbManager);
 AdminManager adminControl(dbManager);
+TransactionManager transManager(dbManager);
+SessionManager sessionManager(dbManager, transManager);
 
 // Console Width Canvas definition to ensure perfect centering alignment
 const int CONSOLE_WIDTH = 80;
@@ -462,16 +466,87 @@ void showUserDashboard(PublicUser& loggedInUser) {
         std::cin >> choice;
 
         switch (choice) {
-            case 1:
-                std::cout << "\n  [Coming soon - Start Session]\n";
+
+            case 1: {
+    clearScreen();
+    std::cout << "\033[36m==========================================================================\n";
+    std::cout << "         START SESSION\n";
+    std::cout << "==========================================================================\033[0m\n\n";
+
+    bool started = sessionManager.start_new_session(loggedInUser.uniqueId);
+
+    if (started) {
+        std::cout << "  Session started successfully!\n\n";
+
+        while (true) {
+            std::cout << "  \033[36m[1]\033[0m Add Internet Time (minutes)\n";
+            std::cout << "  \033[36m[2]\033[0m Add Gaming Time (minutes)\n";
+            std::cout << "  \033[36m[3]\033[0m Add Print Pages\n";
+            std::cout << "  \033[36m[4]\033[0m Add Scan Pages\n";
+            std::cout << "  \033[36m[0]\033[0m End Session & Checkout\n\n";
+            std::cout << "  Choice: ";
+
+            int sessionChoice;
+            std::cin >> sessionChoice;
+
+            if (sessionChoice == 0) {
+                sessionManager.end_and_checkout_session(loggedInUser.uniqueId);
+                std::cout << "\n  Session ended! Thank you.\n";
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
-            case 2:
-                std::cout << "\n  [Coming soon - View My Sessions]\n";
+            }
+
+            int amount;
+            std::cout << "  Enter amount: ";
+            std::cin >> amount;
+
+            if (sessionChoice == 1)
+                sessionManager.simulate_activity(loggedInUser.uniqueId, amount, 0, 0, 0);
+            else if (sessionChoice == 2)
+                sessionManager.simulate_activity(loggedInUser.uniqueId, 0, amount, 0, 0);
+            else if (sessionChoice == 3)
+                sessionManager.simulate_activity(loggedInUser.uniqueId, 0, 0, amount, 0);
+            else if (sessionChoice == 4)
+                sessionManager.simulate_activity(loggedInUser.uniqueId, 0, 0, 0, amount);
+
+            std::cout << "  Added!\n";
+        }
+    } else {
+        std::cout << "  Failed to start session.\n";
+        std::cin.ignore(1000, '\n');
+        std::cin.get();
+    }
+    break;
+}
+            case 2: {
+                clearScreen();
+                std::cout << "\033[36m==========================================================================\n";
+                std::cout << "         MY SESSIONS\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                vector<UserSession> allSessions = dbManager.get_all_sessions();
+                bool found = false;
+
+                for (const auto& session : allSessions) {
+                    if (session.userId == loggedInUser.uniqueId) {
+                        std::cout << "  Internet Time : " << session.internetMinutes << " mins\n";
+                        std::cout << "  Gaming Time   : " << session.gamingMinutes << " mins\n";
+                        std::cout << "  Prints        : " << session.printsCount << " pages\n";
+                        std::cout << "  Scans         : " << session.scansCount << " pages\n";
+                        std::cout << "  ------------------------------------------\n";
+                        found = true;
+                    }
+                }
+
+                if (!found) {
+                    std::cout << "  No active sessions found.\n";
+                }
+
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
+            }
             case 3:
                 std::cout << "\n  [Coming soon - View My Bill]\n";
                 std::cin.ignore(1000, '\n');
