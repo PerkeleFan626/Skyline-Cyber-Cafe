@@ -38,11 +38,11 @@ AdminManager::AdminManager(DataManager& manager) : dbManager(manager) {
 // 2. ADMIN AUTHENTICATION VALIDATOR
 // ============================================================================
 
-bool AdminManager::authenticate_admin(const string& email, const string& password, AdminUser& loggedInAdmin) {
+bool AdminManager::authenticate_admin(const string& userName, const string& password, AdminUser& loggedInAdmin) {
     vector<AdminUser> allAdmins = dbManager.get_all_admins();
 
     for (const auto& admin : allAdmins) {
-        if (admin.userName == email && admin.password == password) {
+        if (admin.userName == userName && admin.password == password) {
             loggedInAdmin = admin;
             return true;
         }
@@ -55,7 +55,13 @@ bool AdminManager::authenticate_admin(const string& email, const string& passwor
 // 3. REGISTRATION ENGINE WITH COLLISION SAFETY CHECK
 // ============================================================================
 
-bool AdminManager::register_new_admin(string userName, string password) {
+bool AdminManager::register_new_admin(const AdminUser& currentAdmin, string newUsername, string newPassword) {
+    if (currentAdmin.adminId != 1) {
+        cout << "Access Denied: Only the Master Admin has permission to register new managers.\n";
+        return false;
+    }
+
+
     vector<AdminUser> existingAdmins = dbManager.get_all_admins();
 
     random_device rd;
@@ -78,8 +84,8 @@ bool AdminManager::register_new_admin(string userName, string password) {
 
     AdminUser newAdmin;
     newAdmin.adminId = selectedId;
-    newAdmin.userName = userName;
-    newAdmin.password = password;
+    newAdmin.userName = newUsername;
+    newAdmin.password = newPassword;
 
     return dbManager.add_admin(newAdmin);
 

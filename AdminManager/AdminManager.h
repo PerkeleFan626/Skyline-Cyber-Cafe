@@ -19,7 +19,7 @@ public:
     AdminManager(DataManager& manager);
 
     bool authenticate_admin(const string& email, const string& password, AdminUser& loggedInAdmin);
-    bool register_new_admin(string email, string password);
+    bool register_new_admin(const AdminUser& currentAdmin, string newUsername, string newPassword);
 
     UserCompleteAudit compile_user_audit_packet(int userId);
     void print_user_audit_dashboard(int userId);
