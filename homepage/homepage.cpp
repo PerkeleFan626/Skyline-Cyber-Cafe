@@ -233,29 +233,58 @@ void showLoginScreen() {
 void showAdminScreen() {
     clearScreen();
     std::cout << "\033[31m==========================================================================\n";
-    std::cout << "         SKYLINE CYBER CAFE - ADMIN LOGIN\n";
+    std::cout << "         SKYLINE CYBER CAFE - STAFF / ADMIN PORTAL\n";
+    std::cout << "==========================================================================\033[0m\n\n";
+
+    std::cout << "  \033[31m[1]\033[0m Master Admin Login\n";
+    std::cout << "  \033[31m[2]\033[0m Regular Admin Login\n";
+    std::cout << "  \033[31m[0]\033[0m Back to Main Menu\n\n";
+
+    std::cout << "\033[31m==========================================================================\033[0m\n\n";
+
+
+    int portalChoice;
+    std::cout << "  Choice: ";
+    if (!(std::cin >> portalChoice)) {
+        std::cin.clear();
+        std::cin.ignore(1000, '\n');
+        return;
+    }
+
+    if (portalChoice == 0) return;
+    if (portalChoice != 1 && portalChoice != 2) return;
+
+    // shared login logic below
+    clearScreen();
+    std::cout << "\033[31m==========================================================================\n";
+    if (portalChoice == 1) {
+        std::cout << "         MASTER ADMIN LOGIN\n";
+    } else {
+        std::cout << "         ADMIN LOGIN\n";
+    }
     std::cout << "==========================================================================\033[0m\n\n";
     std::cout << "  (Type 'exit' at any time to cancel)\n\n";
 
-    std::string email;
+    std::string adminUsername;
     std::string password;
     AdminUser loggedInAdmin;
 
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     while (true) {
-        std::cout << "  Enter admin email    : ";
-        std::getline(std::cin, email);
-        if (email == "exit") return;
+        std::cout << "  Enter admin username : ";
+        std::getline(std::cin, adminUsername);
+        if (adminUsername == "exit") return;
 
-        std::cout << "  Enter admin password : ";
+        std::cout << "  Enter admin password  : ";
         std::getline(std::cin, password);
         if (password == "exit") return;
 
-        bool success = adminControl.authenticate_admin(email, password, loggedInAdmin);
+        bool success = adminControl.authenticate_admin(adminUsername, password, loggedInAdmin);
 
         if (success) {
             std::cout << "\n  Welcome, Admin! ID: " << loggedInAdmin.adminId << "\n";
+            std::cin.ignore(1000, '\n');
             showAdminDashboard(loggedInAdmin);
             return;
         } else {
@@ -280,6 +309,9 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
         std::cout << "  \033[36m[4]\033[0m View All Usernames\n";
         std::cout << "  \033[36m[5]\033[0m Full User Audit\n";
         std::cout << "  \033[36m[6]\033[0m View Active Sessions\n";
+        if (loggedInAdmin.adminId == 1) {
+            std::cout << "  \033[36m[7]\033[0m Register New Admin\n";
+        }
         std::cout << "  \033[36m[0]\033[0m Logout\n\n";
 
         std::cout << "\033[36m==========================================================================\033[0m\n\n";
@@ -433,6 +465,40 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 std::cin.get();
                 break;
             }
+            case 7: {
+                if (loggedInAdmin.adminId != 1) {
+                    std::cout << "\n  Access denied.\n";
+                    std::cin.ignore(1000, '\n');
+                    std::cin.get();
+                    break;
+                }
+
+                clearScreen();
+                std::cout << "\033[31m==========================================================================\n";
+                std::cout << "         REGISTER NEW ADMIN\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                std::string newUsername, newPassword;
+                std::cin.ignore(1000, '\n');
+
+                std::cout << "  New admin username: ";
+                std::getline(std::cin, newUsername);
+
+                std::cout << "  New admin password: ";
+                std::getline(std::cin, newPassword);
+
+                bool success = adminControl.register_new_admin(loggedInAdmin, newUsername, newPassword);
+
+                if (success) {
+                    std::cout << "\n  New admin registered!\n";
+                } else {
+                    std::cout << "\n  Failed to register admin.\n";
+                }
+
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            }
             case 0:
                 std::cout << "\n  Logging out of admin panel...\n";
                 return;
@@ -547,11 +613,35 @@ void showUserDashboard(PublicUser& loggedInUser) {
                 std::cin.get();
                 break;
             }
-            case 3:
-                std::cout << "\n  [Coming soon - View My Bill]\n";
+            case 3: {
+                clearScreen();
+                std::cout << "\033[36m==========================================================================\n";
+                std::cout << "         MY BILL HISTORY\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                std::cout << "  Total Lifetime Bill: $" << loggedInUser.totalBill << "\n\n";
+
+                UserCompleteAudit audit = adminControl.compile_user_audit_packet(loggedInUser.uniqueId);
+
+                if (audit.paymentHistory.empty()) {
+                    std::cout << "  No completed transactions yet.\n";
+                } else {
+                    int counter = 1;
+                    for (const auto& receipt : audit.paymentHistory) {
+                        std::cout << "  Receipt #" << counter++ << "\n";
+                        std::cout << "    Internet : $" << receipt.internetPaid << "\n";
+                        std::cout << "    Gaming   : $" << receipt.gamingPaid << "\n";
+                        std::cout << "    Printing : $" << receipt.printsPaid << "\n";
+                        std::cout << "    Scanning : $" << receipt.scansPaid << "\n";
+                        std::cout << "    TOTAL    : $" << receipt.totalPaid << "\n";
+                        std::cout << "  ------------------------------------------\n";
+                    }
+                }
+
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
+            }
 
             case 4:
                 showPricePlans();

@@ -39,7 +39,7 @@ void DataManager::bootstrap_files() {
     if (!filesystem::exists(admin_file)) {
         ofstream f(admin_file);
         if (f.is_open()) {
-            f << "adminId,email,password\n";
+            f << "adminId,userName,password\n";
             f.close();
         }
     }
@@ -174,7 +174,7 @@ bool DataManager::add_admin(const AdminUser& admin) {
 
     if (f.is_open()) {
         f << admin.adminId << ","
-          << admin.email << ","
+          << admin.userName << ","
           << admin.password << "\n";
         f.close();
         return true;
@@ -200,7 +200,7 @@ vector<AdminUser> DataManager::get_all_admins()
             if (tokens.size() == 3) {
                 AdminUser admin;
                 admin.adminId = stoi(trim(tokens[0]));
-                admin.email = trim(tokens[1]);
+                admin.userName = trim(tokens[1]);
                 admin.password = trim(tokens[2]);
 
                 admins.push_back(admin);
@@ -277,11 +277,9 @@ bool DataManager::remove_active_session(int userId) {
     ofstream f(session_file, ios::trunc);
 
     if (f.is_open()) {
-        // Rewrite the header
         f << "userId,internetMinutes,gamingMinutes,printsCount,scansCount\n";
 
         for (const auto& session : sessions) {
-            // Write everyone BACK to the file EXCEPT the user who is checking out
             if (session.userId != userId) {
                 f << session.userId << ","
                   << session.internetMinutes << ","

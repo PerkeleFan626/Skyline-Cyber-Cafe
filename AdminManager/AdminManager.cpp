@@ -7,17 +7,42 @@
 
 using namespace std;
 
-AdminManager::AdminManager(DataManager& manager) : dbManager(manager) {}
-
 // ============================================================================
-// 1. ADMIN AUTHENTICATION VALIDATOR
+// 1. CONSTRUCTOR
 // ============================================================================
 
-bool AdminManager::authenticate_admin(const string& email, const string& password, AdminUser& loggedInAdmin) {
+AdminManager::AdminManager(DataManager& manager) : dbManager(manager) {
+    vector<AdminUser> allAdmins = dbManager.get_all_admins();
+    bool masterExist = false;
+
+    for (const auto& admin : allAdmins) {
+        if (admin.adminId == MASTER_ID) {
+            masterExist = true;
+            break;
+        }
+    }
+
+    if (!masterExist) {
+        AdminUser masterAdmin;
+        masterAdmin.adminId = MASTER_ID;
+        masterAdmin.userName = MASTER_USER;
+        masterAdmin.password = MASTER_PASS;
+
+        dbManager.add_admin(masterAdmin);
+        cout << "System Security Notice: Master Admin missing. Automatically restored ID 1 to database.\n";
+    }
+}
+
+
+// ============================================================================
+// 2. ADMIN AUTHENTICATION VALIDATOR
+// ============================================================================
+
+bool AdminManager::authenticate_admin(const string& userName, const string& password, AdminUser& loggedInAdmin) {
     vector<AdminUser> allAdmins = dbManager.get_all_admins();
 
     for (const auto& admin : allAdmins) {
-        if (admin.email == email && admin.password == password) {
+        if (admin.userName == userName && admin.password == password) {
             loggedInAdmin = admin;
             return true;
         }
@@ -27,10 +52,16 @@ bool AdminManager::authenticate_admin(const string& email, const string& passwor
 }
 
 // ============================================================================
-// 2. REGISTRATION ENGINE WITH COLLISION SAFETY CHECK
+// 3. REGISTRATION ENGINE WITH COLLISION SAFETY CHECK
 // ============================================================================
 
-bool AdminManager::register_new_admin(string email, string password) {
+bool AdminManager::register_new_admin(const AdminUser& currentAdmin, string newUsername, string newPassword) {
+    if (currentAdmin.adminId != 1) {
+        cout << "Access Denied: Only the Master Admin has permission to register new managers.\n";
+        return false;
+    }
+
+
     vector<AdminUser> existingAdmins = dbManager.get_all_admins();
 
     random_device rd;
@@ -53,15 +84,15 @@ bool AdminManager::register_new_admin(string email, string password) {
 
     AdminUser newAdmin;
     newAdmin.adminId = selectedId;
-    newAdmin.email = email;
-    newAdmin.password = password;
+    newAdmin.userName = newUsername;
+    newAdmin.password = newPassword;
 
     return dbManager.add_admin(newAdmin);
 
 }
 
 // ============================================================================
-// 3. AUDIT DATA HARVESTER CORE ENGINE
+// 4. AUDIT DATA HARVESTER CORE ENGINE
 // ============================================================================
 
 UserCompleteAudit AdminManager::compile_user_audit_packet(int userId) {
@@ -116,7 +147,7 @@ UserCompleteAudit AdminManager::compile_user_audit_packet(int userId) {
 }
 
 // ============================================================================
-// 4. BUSINESS INTEL MONITOR VISUAL INTERFACE
+// 5. BUSINESS INTEL MONITOR VISUAL INTERFACE
 // ============================================================================
 
 void AdminManager::print_user_audit_dashboard(int userId) {
@@ -163,19 +194,19 @@ void AdminManager::print_user_audit_dashboard(int userId) {
 
     cout << " [C] SETTLED HISTORICAL AUDIT TRAIL:\n";
     if (audit.paymentHistory.empty()) {
-        cout << "     • No historical transaction records found for this account line.\n";
+        cout << "• No historical transaction records found for this account line.\n";
     } else {
-        cout << "     Found (" << audit.paymentHistory.size() << ") completed session invoices associated with this ID:\n\n";
+        cout << " Found (" << audit.paymentHistory.size() << ") completed session invoices associated with this ID:\n\n";
         int transactionCounter = 1;
 
         for (const auto& receipt : audit.paymentHistory) {
-            cout << "     Receipt #" << transactionCounter++ << " Breakdown:\n";
-            cout << "       - Internet Settled: $" << receipt.internetPaid << "\n";
-            cout << "       - Gaming Settled:   $" << receipt.gamingPaid << "\n";
-            cout << "       - Printing Settled: $" << receipt.printsPaid << "\n";
-            cout << "       - Scanning Settled: $" << receipt.scansPaid << "\n";
-            cout << "       >> NET TRANSACTION VOLUME PAID: $" << receipt.totalPaid << "\n";
-            cout << "     - - - - - - - - - - - - - - - - - - - - - - - - - -\n";
+            cout << "Receipt #" << transactionCounter++ << " Breakdown:\n";
+            cout << " - Internet Settled: $" << receipt.internetPaid << "\n";
+            cout << " - Gaming Settled:   $" << receipt.gamingPaid << "\n";
+            cout << " - Printing Settled: $" << receipt.printsPaid << "\n";
+            cout << " - Scanning Settled: $" << receipt.scansPaid << "\n";
+            cout << " >> NET TRANSACTION VOLUME PAID: $" << receipt.totalPaid << "\n";
+            cout << "- - - - - - - - - - - - - - - - - - - - - - - - - -\n";
         }
     }
     cout << "========================================================\n\n";
