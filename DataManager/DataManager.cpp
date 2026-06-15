@@ -49,7 +49,7 @@ void DataManager::bootstrap_files() {
     if (!filesystem::exists(session_file)) {
         ofstream f(session_file);
         if (f.is_open()) {
-            f << "userId,durationMinutes,printsCount,scansCount\n";
+            f << "userId,internetMinutes,gamingMinutes,printsCount,scansCount\n";
             f.close();
         }
     }
@@ -226,9 +226,8 @@ vector<AdminUser> DataManager::get_all_admins()
 
             if (tokens.size() == 3) {
                 AdminUser admin;
-                //cerr << tokens[0] << endl;
                admin.adminId = stoi(trim(tokens[0]));
-               // admin.adminId = 1;
+
 
                 Decryptor machine;
 
