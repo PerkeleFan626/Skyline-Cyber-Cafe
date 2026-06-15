@@ -44,39 +44,32 @@ void printCentered(const std::string& text, int width) {
 }
 
 // Function to draw the main colorful, animating homepage
+// Function to draw the main colorful homepage completely instantly
 void displayAnimatedHomepage() {
     clearScreen();
 
-    // Drawing the Border Lines smoothly
+    // Drawing the Border Lines
     std::cout << TEAL;
     printCentered("==========================================================================", CONSOLE_WIDTH);
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-    // Drawing the Huge Skyline Text line-by-line
+    // Drawing the Huge Skyline Text line-by-line immediately
     std::cout << BOLD << TEAL;
     printCentered("  ____   _  __ __   __ _      ___  _   _  _____ ", CONSOLE_WIDTH);
-    std::this_thread::sleep_for(std::chrono::milliseconds(60));
     printCentered(" / ___| | |/ / \\ \\ / /| |    |_ _|| \\ | || ____|", CONSOLE_WIDTH);
-    std::this_thread::sleep_for(std::chrono::milliseconds(60));
     printCentered(" \\___ \\ | ' /   \\ V / | |     | | |  \\| ||  _|  ", CONSOLE_WIDTH);
-    std::this_thread::sleep_for(std::chrono::milliseconds(60));
     printCentered("  ___) || . \\    | |  | |___  | | | |\\  || |___ ", CONSOLE_WIDTH);
-    std::this_thread::sleep_for(std::chrono::milliseconds(60));
     printCentered(" |____/ |_|\\_\\   |_|  |_____||___||_| \\_||_____|", CONSOLE_WIDTH);
     std::cout << RESET;
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     std::cout << TEAL;
     printCentered("==========================================================================", CONSOLE_WIDTH);
     std::cout << RESET;
 
-    // Sub-headers fading in
-    std::this_thread::sleep_for(std::chrono::milliseconds(150));
+    // Sub-headers loading instantly
     std::cout << WHITE << BOLD;
     printCentered("CYBER CAFE AUTOMATED BILLING SYSTEM", CONSOLE_WIDTH);
     std::cout << RESET;
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     std::cout << GRAY;
     printCentered("Auckland CBD Branch", CONSOLE_WIDTH);
     std::cout << RESET << "\n";
@@ -231,7 +224,7 @@ void showLoginScreen() {
 }
 
 void showAdminScreen() {
-    clearScreen();
+
     std::cout << "\033[31m==========================================================================\n";
     std::cout << "         SKYLINE CYBER CAFE - STAFF / ADMIN PORTAL\n";
     std::cout << "==========================================================================\033[0m\n\n";
@@ -242,19 +235,20 @@ void showAdminScreen() {
 
     std::cout << "\033[31m==========================================================================\033[0m\n\n";
 
-
     int portalChoice;
     std::cout << "  Choice: ";
     if (!(std::cin >> portalChoice)) {
         std::cin.clear();
-        std::cin.ignore(1000, '\n');
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         return;
     }
+
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     if (portalChoice == 0) return;
     if (portalChoice != 1 && portalChoice != 2) return;
 
-    // shared login logic below
     clearScreen();
     std::cout << "\033[31m==========================================================================\n";
     if (portalChoice == 1) {
@@ -269,8 +263,7 @@ void showAdminScreen() {
     std::string password;
     AdminUser loggedInAdmin;
 
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
+    // The buffer is guaranteed clean here, so getline won't skip!
     while (true) {
         std::cout << "  Enter admin username : ";
         std::getline(std::cin, adminUsername);
@@ -284,7 +277,7 @@ void showAdminScreen() {
 
         if (success) {
             std::cout << "\n  Welcome, Admin! ID: " << loggedInAdmin.adminId << "\n";
-            std::cin.ignore(1000, '\n');
+
             showAdminDashboard(loggedInAdmin);
             return;
         } else {
@@ -319,14 +312,22 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
 
         int choice;
         std::cout << "  Choice: ";
-        std::cin >> choice;
+        if (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+
+        // Clean out the newline IMMEDIATELY after reading the integer choice
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
             case 1:
                 userControl.print_all_users();
-                std::cin.ignore(1000, '\n');
+                std::cout << "\n  Press Enter to return...";
                 std::cin.get();
                 break;
+
             case 2: {
                 clearScreen();
                 std::cout << "\033[31m==========================================================================\n";
@@ -338,7 +339,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 std::cout << "\n  Enter User ID to edit: ";
                 int editId;
                 std::cin >> editId;
-                std::cin.ignore(1000, '\n');
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
                 std::cout << "\n  What do you want to edit?\n";
                 std::cout << "  [1] Username\n";
@@ -347,7 +348,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 std::cout << "\n  Choice: ";
                 int editChoice;
                 std::cin >> editChoice;
-                std::cin.ignore(1000, '\n');
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
                 std::string newValue;
 
@@ -370,7 +371,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                     std::cout << "\n  Invalid choice.\n";
                 }
 
-                std::cin.ignore(1000, '\n');
+                std::cout << "\n  Press Enter to return...";
                 std::cin.get();
                 break;
             }
@@ -386,6 +387,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 std::cout << "\n  Enter User ID to delete: ";
                 int deleteId;
                 std::cin >> deleteId;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
                 bool deleted = userControl.remove_user_by_id(deleteId);
 
@@ -395,17 +397,18 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                     std::cout << "\n  User not found.\n";
                 }
 
-                std::cin.ignore(1000, '\n');
+                std::cout << "\n  Press Enter to return...";
                 std::cin.get();
                 break;
             }
+
             case 4: {
                 clearScreen();
                 std::cout << "\033[31m==========================================================================\n";
                 std::cout << "         ALL USERNAMES\n";
                 std::cout << "==========================================================================\033[0m\n\n";
 
-                vector<PublicUser> allUsers = dbManager.get_all_public_users();
+                std::vector<PublicUser> allUsers = dbManager.get_all_public_users();
 
                 if (allUsers.empty()) {
                     std::cout << "  No users registered yet.\n";
@@ -415,11 +418,10 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                     }
                 }
 
-                std::cin.ignore(1000, '\n');
+                std::cout << "\n  Press Enter to return...";
                 std::cin.get();
                 break;
             }
-
 
             case 5: {
                 clearScreen();
@@ -432,10 +434,11 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 std::cout << "\n  Enter User ID to audit: ";
                 int auditId;
                 std::cin >> auditId;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
                 adminControl.print_user_audit_dashboard(auditId);
 
-                std::cin.ignore(1000, '\n');
+                std::cout << "\n  Press Enter to return...";
                 std::cin.get();
                 break;
             }
@@ -446,7 +449,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 std::cout << "         USER SESSIONS\n";
                 std::cout << "==========================================================================\033[0m\n\n";
 
-                vector<UserSession> allSessions = dbManager.get_all_sessions();
+                std::vector<UserSession> allSessions = dbManager.get_all_sessions();
 
                 if (allSessions.empty()) {
                     std::cout << "  No active sessions found.\n";
@@ -461,14 +464,15 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                     }
                 }
 
-                std::cin.ignore(1000, '\n');
+                std::cout << "\n  Press Enter to return...";
                 std::cin.get();
                 break;
             }
+
             case 7: {
                 if (loggedInAdmin.adminId != 1) {
                     std::cout << "\n  Access denied.\n";
-                    std::cin.ignore(1000, '\n');
+                    std::cout << "\n  Press Enter to return...";
                     std::cin.get();
                     break;
                 }
@@ -479,7 +483,6 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 std::cout << "==========================================================================\033[0m\n\n";
 
                 std::string newUsername, newPassword;
-                std::cin.ignore(1000, '\n');
 
                 std::cout << "  New admin username: ";
                 std::getline(std::cin, newUsername);
@@ -495,22 +498,24 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                     std::cout << "\n  Failed to register admin.\n";
                 }
 
-                std::cin.ignore(1000, '\n');
+                std::cout << "\n  Press Enter to return...";
                 std::cin.get();
+
                 break;
             }
+
             case 0:
                 std::cout << "\n  Logging out of admin panel...\n";
                 return;
+
             default:
                 std::cout << "\n  Invalid option.\n";
-                std::cin.ignore(1000, '\n');
+                std::cout << "\n  Press Enter to return...";
                 std::cin.get();
                 break;
         }
     }
-}
-void showUserDashboard(PublicUser& loggedInUser) {
+}void showUserDashboard(PublicUser& loggedInUser) {
     while (true) {
         clearScreen();
         std::cout << "\033[36m==========================================================================\n";
@@ -728,3 +733,4 @@ void showEditProfile(PublicUser& loggedInUser) {
     std::cout << "\n  Press Enter to return...";
     std::cin.get();
 }
+
