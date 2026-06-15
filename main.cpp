@@ -1,135 +1,155 @@
 #include <iostream>
-#include "DataManager/DataManager.h"
-#include "UserManager/UserManager.h"
+#include <string>
 #include "Globals/CallingClassGlobal.h"
 
+using namespace std;
+
+// Quick helper to print a clean menu visual boundary line
+void printDivider() {
+    cout << "--------------------------------------------------------\n";
+}
 
 int main() {
+    int mainChoice = 0;
 
-    // ==========================================
-    // 1. ACCOUNT CREATION BLOCK (Uses Live System Clock)
-    // ==========================================
-    cout << "--- TEST 1: ACCOUNT CREATION (REGISTRATION) ---\n";
-    string regName, regPass, regEmail;
+    while (true) {
+        cout << "========================================================\n";
+        cout << "         CYBER CAFE CENTRAL INTERACTIVE FRAMEWORK        \n";
+        cout << "========================================================\n";
+        cout << " 1. [ADMIN] Register a New Administrator Account\n";
+        cout << " 2. [CLIENT] Register a New Public User Account\n";
+        cout << " 3. [TERMINAL] Start Live Terminal Session (Login User)\n";
+        cout << " 4. [TERMINAL] Simulate Live Activity (Add Mins/Prints/Scans)\n";
+        cout << " 5. [TERMINAL] End Session & Execute Financial Checkout\n";
+        cout << " 6. [ADMIN] Run Deep Audit Lookup Dashboard (User History)\n";
+        cout << " 7. [EXIT] Shutdown System\n";
+        printDivider();
+        cout << "Enter selection (1-7): ";
 
-    cout << "Choose a Username: ";
-    cin >> regName;
-    cout << "Choose a Password: ";
-    cin >> regPass;
-    cout << "Enter Email Address: ";
-    cin >> regEmail;
+        // Safety check to handle accidental text inputs gracefully instead of looping forever
+        if (!(cin >> mainChoice)) {
+            cout << "⚠️ Invalid selection. Please enter a valid number configuration.\n";
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
+        cin.ignore(10000, '\n'); // Clear line buffer memory
 
-    // 💡 No more manual date input or strings! The backend pulls your PC clock automatically.
-    if (userControl.register_new_public_user(regName, regPass, regEmail)) {
-        cout << "Success: Account validated, unique ID computed, and live system date stamped!\n\n";
-    } else {
-        cout << "Failure: Registration failed.\n\n";
+        // System Break Condition
+        if (mainChoice == 7) {
+            cout << "\nShutting down Cyber Cafe Core Engines. Safe travels!\n";
+            break;
+        }
+
+        switch (mainChoice) {
+            case 1: {
+                // 1. ADMIN REGISTRATION ENGINE
+                string admEmail, admPass;
+                cout << "\n--- [ADMIN PORTAL] CREATE MANAGER ACCOUNT ---\n";
+                cout << "Enter New Admin Email: ";
+                getline(cin, admEmail);
+                cout << "Enter New Admin Password: ";
+                getline(cin, admPass);
+
+                if (adminControl.register_new_admin(admEmail, admPass)) {
+                    cout << "👉 Success: Admin account saved. Check your admins.csv file!\n";
+                } else {
+                    cout << "❌ Error: Failed to append admin to storage records.\n";
+                }
+                break;
+            }
+
+            case 2: {
+                // 2. CLIENT REGISTRATION ENGINE
+                string pubUser, pubPass, pubEmail;
+                cout << "\n--- [CLIENT PORTAL] REGISTER NEW PROFILE ---\n";
+                cout << "Enter Account Username: ";
+                getline(cin, pubUser);
+                cout << "Enter Account Password: ";
+                getline(cin, pubPass);
+                cout << "Enter Account Email:    ";
+                getline(cin, pubEmail);
+
+                if (userControl.register_new_public_user(pubUser, pubPass, pubEmail)) {
+                    cout << "👉 Success: User registration complete (IDs auto-start at 1001).\n";
+                    cout << "Check public_users.csv to view their baseline entry profile.\n";
+                } else {
+                    cout << "❌ Error: Public account registration rejected.\n";
+                }
+                break;
+            }
+
+            case 3: {
+                // 3. START TERMINAL SESSION LAYER
+                int targetId;
+                cout << "\n--- [TERMINAL GATEWAY] ACTIVATING COMPUTER DESK ---\n";
+                cout << "Enter the User ID logging in (e.g., 1001): ";
+                cin >> targetId;
+
+                // Spawns an unbilled running tally spreadsheet row initialized to 0
+                if (sessionControl.start_new_session(targetId)) {
+                    cout << "👉 Open sessions.csv! You will see an active tracking block active.\n";
+                }
+                break;
+            }
+
+            case 4: {
+                // 4. INJECT RUNNING TERMINAL ACTIVITY FOOTPRINTS
+                int targetId;
+                int incInternet, incGaming, incPrints, incScans;
+
+                cout << "\n--- [TERMINAL DESK] SIMULATING DESKTOP OPERATIONS ---\n";
+                cout << "Enter User ID currently occupying terminal: ";
+                cin >> targetId;
+                cout << "Add Internet Minutes used: ";
+                cin >> incInternet;
+                cout << "Add Gaming Minutes used:   ";
+                cin >> incGaming;
+                cout << "Add Pages Printed:         ";
+                cin >> incPrints;
+                cout << "Add Documents Scanned:     ";
+                cin >> incScans;
+
+                // Mutates metrics dynamically on disk inside sessions.csv
+                if (sessionControl.simulate_activity(targetId, incInternet, incGaming, incPrints, incScans)) {
+                    cout << "👉 Check sessions.csv! The counts for User " << targetId << " have updated.\n";
+                }
+                break;
+            }
+
+            case 5: {
+                // 5. TERMINATE LIVE MONITORING & RESOLVE BILL LEDGER
+                int targetId;
+                cout << "\n--- [FRONT DESK CHECKOUT TERMINAL] ---\n";
+                cout << "Enter checking out User ID: ";
+                cin >> targetId;
+
+                cout << "Executing cross-file verification logic pipeline...\n";
+                // Collects session numbers, converts to money, logs receipt, clears terminal sheet
+                if (sessionControl.end_and_checkout_session(targetId)) {
+                    cout << "🟢 Database Synchronization Complete! Files updated successfully.\n";
+                }
+                break;
+            }
+
+            case 6: {
+                // 6. ADMINISTRATIVE CROSS-FILE MASTER DOSSIER LOOKUP
+                int lookupId;
+                cout << "\n--- [SECURITY CONSOLE] MASTER DOSSIER AUDIT INTERFACE ---\n";
+                cout << "Enter target Customer User ID to inspect (e.g., 1001): ";
+                cin >> lookupId;
+
+                // Fire our new Detective Engine to read all CSVs and print the full summary!
+                adminControl.print_user_audit_dashboard(lookupId);
+                break;
+            }
+
+            default:
+                cout << "⚠️ Selection outside core bounds. Please choose a value from 1 to 7.\n";
+                break;
+        }
+        cout << "\n";
     }
 
-    // ==========================================
-    // 2. SEARCH BY ID BLOCK (Uses cin >>)
-    // ==========================================
-    cout << "--- TEST 2: SEARCH BY ID ---\n";
-    cout << "Enter an ID to look up: ";
-    int testId{};
-    cin >> testId;
-
-    if (userControl.find_user_by_id(testId, matchingUser)) {
-        cout << "Success: Found " << matchingUser.userName << " | " << matchingUser.email << "\n\n";
-    } else {
-        cout << "Failure: User not found.\n\n";
-    }
-
-    // ==========================================
-    // 3. SEARCH BY USERNAME BLOCK (Uses cin >>)
-    // ==========================================
-    cout << "--- TEST 3: SEARCH BY USERNAME ---\n";
-    cout << "Enter an exact username to look up: ";
-    string nameToSearch;
-    cin >> nameToSearch;
-
-    PublicUser nameMatchUser;
-    if (userControl.find_user_by_name(nameToSearch, nameMatchUser)) {
-        cout << "Success: Found ID " << nameMatchUser.uniqueId << " with Email: " << nameMatchUser.email << "\n\n";
-    } else {
-        cout << "Failure: Username not found.\n\n";
-    }
-
-    // ==========================================
-    // 4. DELETE BY ID BLOCK (Uses cin >>)
-    // ==========================================
-    cout << "--- TEST 4: DELETE RECORD ---\n";
-    cout << "Enter an ID to completely delete from CSV: ";
-    int idToDelete;
-    cin >> idToDelete;
-
-    if (userControl.remove_user_by_id(idToDelete)) {
-        cout << "Success: Record erased.\n\n";
-    } else {
-        cout << "failure\n\n";
-    }
-
-    // ==========================================
-    // 5. DISPLAY ALL RECORDS BLOCK
-    // ==========================================
-    cout << "--- TEST 5: PRINT CURRENT CSV STATE (EXCLUDING HEADER) ---\n";
-    userControl.print_all_users();
-    cout << "\n";
-
-    // ==========================================
-    // 6. AUTHENTICATION BLOCK (Uses getline)
-    // ==========================================
-    cout << "--- TEST 6: LOGIN VALIDATION ---\n";
-    string inputUserName, inputPassword;
-
-    // 💡 Crucial: Clears out '\n' left over by the last cin >> in Test 4
-    cin.ignore();
-
-    cout << "Enter Login Username: ";
-    getline(cin, inputUserName);
-
-    cout << "Enter Login Password: ";
-    getline(cin, inputPassword);
-
-    PublicUser activeUser;
-
-    if (userControl.authenticate_user(inputUserName, inputPassword, activeUser)) {
-        cout << "Auth Success! Welcome back, " << activeUser.email << "\n\n";
-
-        // ====================================================
-        // 7. MUTATION DEDICATED TESTS (Nested under login safety)
-        // ====================================================
-        cout << "--- TEST 7: ACCOUNT REFIELD MODIFICATIONS ---\n";
-
-        // Test A: Modify Username
-        cout << "Enter a NEW username for this account: ";
-        string freshName;
-        getline(cin, freshName);
-        userControl.update_username(activeUser.uniqueId, freshName);
-
-        // Test B: Modify Password
-        cout << "Enter a NEW password for this account: ";
-        string freshPass;
-        getline(cin, freshPass);
-        userControl.update_password(activeUser.uniqueId, freshPass);
-
-        // Test C: Modify Email
-        cout << "Enter a NEW email for this account: ";
-        string freshEmail;
-        getline(cin, freshEmail);
-        userControl.update_email(activeUser.uniqueId, freshEmail);
-
-        // Test D: Modify Financial Bill Balance
-        cout << "Enter a NEW bill balance amount (e.g., 45.50): ";
-        double freshBill;
-        cin >> freshBill;
-        userControl.update_total_bill(activeUser.uniqueId, freshBill);
-
-        // Final Sanity Verification Dump
-        cout << "\n--- FINAL VERIFICATION DUMP OF REWRITTEN CSV ---\n";
-        userControl.print_all_users();
-
-    } else {
-        cout << "Auth Failure: Skipping modification tests.\n";
-    }
+    return 0;
 }
