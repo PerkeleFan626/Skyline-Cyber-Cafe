@@ -5,6 +5,8 @@
 #include <filesystem>
 #include "sstream"
 
+#include "../Security/SecurityManager.h"
+
 using namespace std;
 
 // ============================================================================
@@ -98,12 +100,22 @@ bool DataManager::add_public_user(const PublicUser& user) {
     ofstream f(public_file, ios::app);
 
     if (f.is_open()) {
+
+        Encryptor machine;
+
+        string encryptedUser = machine.encrypt_string(user.userName);
+        string encryptedPass = machine.encrypt_string(user.password);
+        string encryptedEmail = machine.encrypt_string(user.email);
+
+
         f << user.uniqueId << ","
-          << user.userName << ","
-          << user.password << ","
-          << user.email << ","
-          << user.joiningDate << ","
-          << user.totalBill << "\n";
+
+        << encryptedUser << ","
+        << encryptedPass << ","
+        << encryptedEmail << ","
+
+        << user.joiningDate << ","
+        << user.totalBill << "\n";
 
         f.close();
         return true;
@@ -129,11 +141,14 @@ vector<PublicUser> DataManager::get_all_public_users() {
                 PublicUser user;
 
                 user.uniqueId = stoi(trim(tokens[0]));
-                user.userName = tokens[1];
-                user.password = tokens[2];
-                user.email = tokens[3];
                 user.joiningDate = tokens[4];
                 user.totalBill = stod(trim(tokens[5]));
+
+                Decryptor machine;
+
+                user.userName = machine.decrypt_string(trim(tokens[1]));
+                user.password = machine.decrypt_string(trim(tokens[2]));
+                user.email    = machine.decrypt_string(trim(tokens[3]));
 
                 users.push_back(user);
             }
@@ -151,13 +166,20 @@ bool DataManager::rewrite_public_users(const vector<PublicUser>& users) {
     if (f.is_open()) {
         f << "uniqueId,userName,password,email,joiningDate,totalBill\n";
 
+        Encryptor machine;
+
         for (const auto& user : users) {
+
+            string encryptedUser = machine.encrypt_string(user.userName);
+            string encryptedPass = machine.encrypt_string(user.password);
+            string encryptedEmail = machine.encrypt_string(user.email);
+
             f << user.uniqueId << ","
-               << user.userName << ","
-               << user.password << ","
-               << user.email << ","
-               << user.joiningDate << ","
-               << user.totalBill << "\n";
+              << encryptedUser << ","
+              << encryptedPass << ","
+              << encryptedEmail << ","
+              << user.joiningDate << ","
+              << user.totalBill << "\n";
         }
         f.close();
         return true;
@@ -173,9 +195,14 @@ bool DataManager::add_admin(const AdminUser& admin) {
     ofstream f(admin_file, ios::app);
 
     if (f.is_open()) {
+        Encryptor machine;
+
+        string encryptedUser = machine.encrypt_string(admin.userName);
+        string encryptedPass = machine.encrypt_string(admin.password);
+
         f << admin.adminId << ","
-          << admin.userName << ","
-          << admin.password << "\n";
+          << encryptedUser << ","
+          << encryptedPass << "\n";
         f.close();
         return true;
     }
@@ -200,8 +227,11 @@ vector<AdminUser> DataManager::get_all_admins()
             if (tokens.size() == 3) {
                 AdminUser admin;
                 admin.adminId = stoi(trim(tokens[0]));
-                admin.userName = trim(tokens[1]);
-                admin.password = trim(tokens[2]);
+
+                Decryptor machine;
+
+                admin.userName = machine.decrypt_string(trim(tokens[1]));
+                admin.password = machine.decrypt_string(trim(tokens[2]));
 
                 admins.push_back(admin);
             }
