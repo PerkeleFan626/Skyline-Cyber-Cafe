@@ -1,0 +1,278 @@
+[33mcommit e57bae03a7614cdf5664545977815b7cf8138bc9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/homepage-ui[m[33m)[m
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Tue Jun 16 09:54:41 2026 +1200
+
+    merged
+
+[33mcommit a0bb40685e03c23900a12bbe8267b7c3d7c64cc2[m
+Merge: a038712 2bd1117
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Tue Jun 16 09:50:22 2026 +1200
+
+    :wq
+    :w
+    Merge branch 'Security' of https://github.com/PerkeleFan626/Skyline-Cyber-Cafe into feature/homepage-ui
+
+[33mcommit 2bd11179ffa19622244f646fe34ffe2ae6acf353[m[33m ([m[1;31morigin/Security[m[33m)[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Tue Jun 16 09:48:04 2026 +1200
+
+    hejsan
+
+[33mcommit 0b3c6e606780b41e48e5dbf1edba7c6b0ea19849[m
+Merge: 433c0e2 8d7d3d0
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Mon Jun 15 12:05:55 2026 +1200
+
+    merged
+
+[33mcommit a038712d0e8a2ac4c0c1e29bc0159cb66d655e0f[m[33m ([m[1;31morigin/feature/homepage-ui[m[33m)[m
+Merge: c215efe 8d7d3d0
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Mon Jun 15 10:46:02 2026 +1200
+
+    Add master admin login fork and register new admin feature
+
+[33mcommit c215efe7f623a5815f625b1103932efcd3617f1d[m
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Mon Jun 15 09:23:43 2026 +1200
+
+    Wire up session start and view sessions for user dashboard
+
+[33mcommit 8d7d3d086181b5d28ba53efa96ae5f6e72adee73[m[33m ([m[1;31morigin/Data2[m[33m)[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Mon Jun 15 09:11:12 2026 +1200
+
+    master admin privileges
+
+[33mcommit bd93ed8528e74008930d79f745a67eff00def3b3[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Fri Jun 12 12:09:34 2026 +1200
+
+    Added a master admin
+
+[33mcommit 27780528494ba538c03a1a1937ad1061c52205c8[m
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Fri Jun 12 10:09:51 2026 +1200
+
+    Restore working homepage.cpp from before merge issues
+
+[33mcommit 99d9f3e937c0edc6591bdaf9daac0f59d7d78bfa[m
+Merge: 47be06e 4ecb0bc
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Thu Jun 11 10:50:39 2026 +1200
+
+    Merge Data2 - add SessionManager and TransactionManager
+
+[33mcommit e1ef2f1f29f41e851104f4c2a176022d6770b444[m
+Merge: 5b53f33 4ecb0bc
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Thu Jun 11 08:32:13 2026 +1200
+
+    Merge branch 'Data2' of https://github.com/PerkeleFan626/Skyline-Cyber-Cafe into Data2
+    hejsan
+
+[33mcommit 5b53f33aa451a4a5d8198b068f540eed68e4ab6f[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Thu Jun 11 08:32:05 2026 +1200
+
+    hej
+
+[33mcommit 4ecb0bcf2343f41fb44eacf293af6f427f33b132[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Wed Jun 10 19:28:38 2026 +1200
+
+    What have i done
+
+[33mcommit d4c4341b94a1a279448ad4690f5425038a158f2d[m
+Merge: bfb7195 66bfd27
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Wed Jun 10 18:51:50 2026 +1200
+
+    Merge branch 'Data2' of https://github.com/PerkeleFan626/Skyline-Cyber-Cafe into Data2
+
+[33mcommit 47be06e0664f92c3bed5e198179cd947dbaec3d6[m
+Merge: 878e716 66bfd27
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Tue Jun 9 11:48:46 2026 +1200
+
+    Merge Data2 into feature/homepage-ui
+
+[33mcommit 878e716da79103d5c3217e2effa83816e2a25fd9[m
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Tue Jun 9 11:43:01 2026 +1200
+
+    Add admin dashboard with menu options
+
+[33mcommit d8384fa6f4bdea0bc24e97a6c0fe9a88cf5f5242[m
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Mon Jun 8 11:53:15 2026 +1200
+
+    lord help us
+
+[33mcommit 66bfd2716dfbba076c917dbd97ff9aea068f2498[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Mon Jun 8 11:26:26 2026 +1200
+
+    Im so sorry
+
+[33mcommit 0abba15f9a453b96c489b08bc134a6c7ded77c97[m
+Merge: 1934bef 00f4715
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Mon Jun 8 10:34:16 2026 +1200
+
+    Merge Data2 branch - add AdminManager files
+
+[33mcommit 1934bef85263561cbab6b947faa43e38ddbd9f0d[m
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Mon Jun 8 10:21:27 2026 +1200
+
+    Add login validation and exit option for registration and login
+
+[33mcommit 00f471548ac6d5161a22cfea601b28476be3b91d[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Fri Jun 5 10:51:05 2026 +1200
+
+    AdminDone
+
+[33mcommit 13b94d1294efc83d7f246499a29da379635434a2[m
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Fri Jun 5 10:00:16 2026 +1200
+
+    Add registration, login, email and password validation
+
+[33mcommit 433c0e20ba25d4b5f1680ddfec78e0b9bc459eb5[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Fri Jun 5 09:17:24 2026 +1200
+
+    hej
+
+[33mcommit 05c7ccb2df572cbbc7b87184fa48639829ac7ef4[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Fri Jun 5 09:14:46 2026 +1200
+
+    hejsan
+
+[33mcommit dc7f9701226933b3cd030d316f54d878134df6b7[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Fri Jun 5 09:14:27 2026 +1200
+
+    hejsan
+
+[33mcommit 1c42b6d7d8ab94ae33f4055b3517a05e8c9116b3[m
+Merge: 8782deb ae55721
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Fri Jun 5 09:09:55 2026 +1200
+
+    hejsan
+
+[33mcommit b4bc4390b092d72064e49b5b4cad72957dcbc5a8[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Thu Jun 4 12:13:51 2026 +1200
+
+    420
+
+[33mcommit ae5572192cf1db6788ad856d1007f700ec4f7aa4[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Merge: 4c19b9a d5a7dfc
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Thu Jun 4 09:59:27 2026 +1200
+
+    hejsan
+
+[33mcommit d5a7dfc33c2c9145b34b4ce724349186f1ad65c8[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Thu Jun 4 09:36:04 2026 +1200
+
+    funka for fan
+
+[33mcommit 8782deb9355ec3509f27bc33dbc31a40f20dd0d8[m
+Merge: 28956ff 678fd5a
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Wed Jun 3 18:21:52 2026 +1200
+
+    Merge main into feature/homepage-ui, resolve CMakeLists conflict
+
+[33mcommit bfb71956afa45d6b31a986f1473270adb34300ca[m
+Merge: d1bb58b d1e194a
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Wed Jun 3 15:56:34 2026 +1200
+
+    hejsan
+
+[33mcommit d1bb58b0836b9a32702763ead79a8600627c811a[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Wed Jun 3 15:54:32 2026 +1200
+
+    hejsan
+
+[33mcommit 678fd5a104b10c302b06b227eea07f35b0bb4b9e[m
+Merge: 5aaabba 4c19b9a
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Tue Jun 2 10:42:19 2026 +1200
+
+    Merge branch 'main' of https://github.com/PerkeleFan626/Skyline-Cyber-Cafe
+    
+    # Conflicts:
+    #       .idea/editor.xml
+
+[33mcommit 28956ff6a01260bb97f6d43639d28bb172bd693c[m
+Author: SadmanZ <sadmanzaman01748@gmail.com>
+Date:   Tue Jun 2 09:42:17 2026 +1200
+
+    HOMEPAGE AND MENUS
+
+[33mcommit 4c19b9af907a819af3baa0fea2786ee862f1a833[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Fri May 29 12:22:30 2026 +1200
+
+    Hejsan
+
+[33mcommit d1e194a211729b3871ad2d899efab17a3a70fbc3[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Fri May 29 12:18:42 2026 +1200
+
+    Dra at fanders
+
+[33mcommit 456c691389b3b5b5e1159ed41f411553b1b4ae60[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Fri May 29 12:06:07 2026 +1200
+
+    added more stuff part2
+
+[33mcommit 9d99f6cc2ded9bf2fe65dbadb2d0e70139d992eb[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Thu May 28 20:27:59 2026 +1200
+
+    Added more stuff
+
+[33mcommit 9e2714740a52e7e1dd4d7ab16abcec8ce7cd83d5[m
+Merge: eb462cf b83ecc4
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Thu May 28 12:31:17 2026 +1200
+
+    Merge branch 'Data'
+
+[33mcommit eb462cf01928727394fc81e46f563424e1d88583[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Thu May 28 12:30:41 2026 +1200
+
+    added ignore
+
+[33mcommit b83ecc47984295f9a7e4b29d2addb8b98d07d14c[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Thu May 28 12:24:48 2026 +1200
+
+    hejsan
+
+[33mcommit 5817385cc58033c29ab8eaa82427b0e5a87ec6f0[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Thu May 28 12:05:12 2026 +1200
+
+    Can now search for user IDs in the public csv
+
+[33mcommit 3d880a472ffc35b2ece23ae75129f8dd78e36519[m
+Author: PerkeleFan626 <ssebbe580@gmail.com>
+Date:   Wed May 27 20:11:20 2026 +1200
+
+    Added more code
+

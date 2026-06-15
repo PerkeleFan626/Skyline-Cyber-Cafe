@@ -226,7 +226,9 @@ vector<AdminUser> DataManager::get_all_admins()
 
             if (tokens.size() == 3) {
                 AdminUser admin;
-                admin.adminId = stoi(trim(tokens[0]));
+                //cerr << tokens[0] << endl;
+               admin.adminId = stoi(trim(tokens[0]));
+               // admin.adminId = 1;
 
                 Decryptor machine;
 
@@ -258,6 +260,7 @@ bool DataManager::add_transaction_history(const TransactionRecord& record) {
         f.close();
         return true;
     }
+
     return false;
 }
 
@@ -274,6 +277,7 @@ bool DataManager::add_active_session(const UserSession& session) {
         f.close();
         return true;
     }
+
     return false;
 }
 
@@ -298,6 +302,7 @@ vector<UserSession> DataManager::get_all_sessions()
             }
             f.close();
         }
+
         return sessions;
     }
 }

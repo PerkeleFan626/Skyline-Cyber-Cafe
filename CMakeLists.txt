@@ -20,4 +20,6 @@ add_executable(Cafe main.cpp
         TransactionManager/TransactionManager.h
         TransactionManager/TransactionManager.cpp
         SessionManager/SessionManager.h
-        SessionManager/SessionManager.cpp)
+        SessionManager/SessionManager.cpp
+        Security/SecurityManager.cpp
+        Security/SecurityManager.h)
