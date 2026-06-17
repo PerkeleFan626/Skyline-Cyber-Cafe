@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
-#include <thread> // Used for timing the animation
-#include <chrono> // Used for milliseconds definitions
+#include <thread>
+#include <chrono>
 #include "homepage.hpp"
 #include "../UserManager/UserManager.h"
 #include "../Globals/Globals.h"
@@ -25,7 +25,7 @@ const std::string WHITE   = "\033[37m";
 const std::string BOLD    = "\033[1m";
 const std::string GRAY    = "\033[90m";
 
-// Function to keep the console clean within one interface phase
+
 void clearScreen() {
     #ifdef _WIN32
         std::system("cls");
@@ -34,7 +34,7 @@ void clearScreen() {
     #endif
 }
 
-// Math helper to center any raw string dynamically based on our canvas width
+
 void printCentered(const std::string& text, int width) {
     int padding = (width - text.length()) / 2;
     if (padding > 0) {
@@ -43,12 +43,10 @@ void printCentered(const std::string& text, int width) {
     std::cout << text << "\n";
 }
 
-// Function to draw the main colorful, animating homepage
-// Function to draw the main colorful homepage completely instantly
 void displayAnimatedHomepage() {
     clearScreen();
 
-    // Drawing the Border Lines
+
     std::cout << TEAL;
     printCentered("==========================================================================", CONSOLE_WIDTH);
 
@@ -74,7 +72,7 @@ void displayAnimatedHomepage() {
     printCentered("Auckland CBD Branch", CONSOLE_WIDTH);
     std::cout << RESET << "\n";
 
-    // MENU DISPLAY (Static and aligned)
+
     std::cout << WHITE;
     std::cout << "        " << TEAL << "[1]" << WHITE << " Register New User\n";
     std::cout << "        " << TEAL << "[2]" << WHITE << " Customer Login (Start Session)\n";
@@ -263,7 +261,7 @@ void showAdminScreen() {
     std::string password;
     AdminUser loggedInAdmin;
 
-    // The buffer is guaranteed clean here, so getline won't skip!
+
     while (true) {
         std::cout << "  Enter admin username : ";
         std::getline(std::cin, adminUsername);
@@ -504,6 +502,52 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 break;
             }
 
+            case 8: {
+                if (loggedInAdmin.adminId != 1) {
+                    std::cout << "\n  Access denied.\n";
+                    std::cin.ignore(1000, '\n');
+                    std::cin.get();
+                    break;
+                }
+
+                clearScreen();
+                std::cout << "\033[31m==========================================================================\n";
+                std::cout << "         DELETE AN ADMIN\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                vector<AdminUser> allAdmins = dbManager.get_all_admins();
+
+                std::cout << "  Current Admins:\n";
+                for (const auto& admin : allAdmins) {
+                    if (admin.adminId != 1) {  // Don't allow deleting master admin
+                        std::cout << "  [" << admin.adminId << "] " << admin.userName << "\n";
+                    }
+                }
+
+                std::cout << "\n  Enter Admin ID to delete (or 0 to cancel): ";
+                int adminIdToDelete;
+                std::cin >> adminIdToDelete;
+
+                if (adminIdToDelete == 0) {
+                    std::cin.ignore(1000, '\n');
+                    std::cin.get();
+                    break;
+                }
+
+                if (adminIdToDelete == 1) {
+                    std::cout << "\n  Cannot delete Master Admin!\n";
+                    std::cin.ignore(1000, '\n');
+                    std::cin.get();
+                    break;
+                }
+
+                // gotta Call Sebastian's delete_admin function when available
+                std::cout << "\n  Admin deleted!\n";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            }
+
             case 0:
                 std::cout << "\n  Logging out of admin panel...\n";
                 return;
@@ -675,22 +719,21 @@ void showPricePlans() {
     std::cout << "         SKYLINE CYBER CAFE - PRICE PLANS\n";
     std::cout << "==========================================================================\033[0m\n\n";
 
-    std::cout << "  BROWSING\n";
-    std::cout << "  --------\n";
-    std::cout << "  $3.00 per hour\n\n";
+    std::cout << "  INTERNET BROWSING\n";
+    std::cout << "  -----------------\n";
+    std::cout << "  $0.10 per minute ($6.00 per hour)\n\n";
+
+    std::cout << "  GAMING\n";
+    std::cout << "  ------\n";
+    std::cout << "  $0.15 per minute ($9.00 per hour)\n\n";
 
     std::cout << "  PRINTING\n";
     std::cout << "  --------\n";
-    std::cout << "  $0.20 per page\n\n";
+    std::cout << "  $0.25 per page\n\n";
 
     std::cout << "  SCANNING\n";
     std::cout << "  --------\n";
     std::cout << "  $0.50 per page\n\n";
-
-    std::cout << "\033[36m==========================================================================\033[0m\n";
-    std::cout << "\n  Press Enter to return...";
-    std::cin.ignore(1000, '\n');
-    std::cin.get();
 }
 
 void showEditProfile(PublicUser& loggedInUser) {
