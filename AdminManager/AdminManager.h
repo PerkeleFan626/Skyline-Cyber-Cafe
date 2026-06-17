@@ -20,9 +20,8 @@ public:
 
     bool authenticate_admin(const string& email, const string& password, AdminUser& loggedInAdmin);
     bool register_new_admin(const AdminUser& currentAdmin, string newUsername, string newPassword);
+    bool execute_admin_deletion(const AdminUser& currentAdmin, int targetAdminId);
 
     UserCompleteAudit compile_user_audit_packet(int userId);
     void print_user_audit_dashboard(int userId);
 };
-
-

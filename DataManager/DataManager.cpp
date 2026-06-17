@@ -213,6 +213,35 @@ vector<AdminUser> DataManager::get_all_admins()
 }
 
 // ============================================================================
+// 🟢 NEW: REMOVE ADMIN FROM DISK
+// ============================================================================
+bool DataManager::remove_admin(int adminId) {
+    vector<AdminUser> admins = get_all_admins();
+
+    ofstream f(admin_file, ios::trunc);
+
+    if (f.is_open()) {
+        f << "adminId,userName,password\n";
+
+        Encryptor machine;
+
+        for (const auto& admin : admins) {
+            if (admin.adminId != adminId) {
+                string encryptedUser = machine.encrypt_string(admin.userName);
+                string encryptedPass = machine.encrypt_string(admin.password);
+
+                f << admin.adminId << ","
+                  << encryptedUser << ","
+                  << encryptedPass << "\n";
+            }
+        }
+        f.close();
+        return true;
+    }
+    return false;
+}
+
+// ============================================================================
 // 5. Transaction History
 // ============================================================================
 

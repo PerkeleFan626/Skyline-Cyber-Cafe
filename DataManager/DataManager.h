@@ -35,6 +35,7 @@ public:
     // --- ADMIN OPERATIONS ---
     vector<AdminUser> get_all_admins();
     bool add_admin(const AdminUser& admin);
+    bool remove_admin(int adminId);
 
     // --- LIVE SESSION TRACKING OPERATIONS ---
     bool add_active_session(const UserSession& session);

@@ -92,7 +92,31 @@ bool AdminManager::register_new_admin(const AdminUser& currentAdmin, string newU
 }
 
 // ============================================================================
-// 4. AUDIT DATA HARVESTER CORE ENGINE
+// 4. ADMINISTRATIVE MANAGER DELETION ACTION
+// ============================================================================
+bool AdminManager::execute_admin_deletion(const AdminUser& currentAdmin, int targetAdminId) {
+
+    if (currentAdmin.adminId != 1) {
+        cout << "Access Denied: Only the Master Admin has permission to remove managers.\n";
+        return false;
+    }
+
+    if (targetAdminId == 1) {
+        cout << "Security Violation: The Master Admin account cannot be removed from the system.\n";
+        return false;
+    }
+
+    if (dbManager.remove_admin(targetAdminId)) {
+        cout << "Success: Admin ID [" << targetAdminId << "] has been permanently removed.\n";
+        return true;
+    }
+
+    cout << "Error: Could not process deletion request.\n";
+    return false;
+}
+
+// ============================================================================
+// 5. AUDIT DATA HARVESTER CORE ENGINE
 // ============================================================================
 
 UserCompleteAudit AdminManager::compile_user_audit_packet(int userId) {
@@ -147,7 +171,7 @@ UserCompleteAudit AdminManager::compile_user_audit_packet(int userId) {
 }
 
 // ============================================================================
-// 5. BUSINESS INTEL MONITOR VISUAL INTERFACE
+// 6. BUSINESS INTEL MONITOR VISUAL INTERFACE
 // ============================================================================
 
 void AdminManager::print_user_audit_dashboard(int userId) {
