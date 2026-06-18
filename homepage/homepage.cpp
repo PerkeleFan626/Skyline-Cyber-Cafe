@@ -15,7 +15,7 @@ AdminManager adminControl(dbManager);
 TransactionManager transManager(dbManager);
 SessionManager sessionManager(dbManager, transManager);
 
-// Console Width Canvas definition to ensure perfect centering alignment
+
 const int CONSOLE_WIDTH = 80;
 
 // ANSI Color Escape Codes
@@ -50,7 +50,7 @@ void displayAnimatedHomepage() {
     std::cout << TEAL;
     printCentered("==========================================================================", CONSOLE_WIDTH);
 
-    // Drawing the Huge Skyline Text line-by-line immediately
+    // Drawing the Huge Skyline Text line-by-line
     std::cout << BOLD << TEAL;
     printCentered("  ____   _  __ __   __ _      ___  _   _  _____ ", CONSOLE_WIDTH);
     printCentered(" / ___| | |/ / \\ \\ / /| |    |_ _|| \\ | || ____|", CONSOLE_WIDTH);
@@ -63,7 +63,7 @@ void displayAnimatedHomepage() {
     printCentered("==========================================================================", CONSOLE_WIDTH);
     std::cout << RESET;
 
-    // Sub-headers loading instantly
+    // Sub-headers
     std::cout << WHITE << BOLD;
     printCentered("CYBER CAFE AUTOMATED BILLING SYSTEM", CONSOLE_WIDTH);
     std::cout << RESET;
@@ -86,7 +86,7 @@ void displayAnimatedHomepage() {
     std::cout << "\n  " << BOLD << "Choice: " << RESET;
 }
 
-// Sub-Page Navigation Screens (The interactive placeholder rooms)
+// Sub-Page Navigation Screens
 void showRegistrationScreen() {
     clearScreen();
     std::cout << "\033[36m==========================================================================\n";
@@ -316,7 +316,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
             continue;
         }
 
-        // Clean out the newline IMMEDIATELY after reading the integer choice
+
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
@@ -534,6 +534,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                     break;
                 }
 
+
                 if (adminIdToDelete == 1) {
                     std::cout << "\n  Cannot delete Master Admin!\n";
                     std::cin.ignore(1000, '\n');
@@ -541,8 +542,14 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                     break;
                 }
 
-                // gotta Call Sebastian's delete_admin function when available
-                std::cout << "\n  Admin deleted!\n";
+                bool deleted = dbManager.remove_admin(adminIdToDelete);
+
+                if (deleted) {
+                    std::cout << "\n  Admin deleted successfully!\n";
+                } else {
+                    std::cout << "\n  Admin not found.\n";
+                }
+
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
