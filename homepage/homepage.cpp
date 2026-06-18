@@ -100,22 +100,29 @@ void showRegistrationScreen() {
 
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    std::cout << "  Enter your name     : ";
+    std::cout << "  [1/3] Enter your name (e.g., John Smith): ";
     std::getline(std::cin, userName);
     if (userName == "exit") return;
 
-    std::cout << "  Enter your email    : ";
+    std::cout << "\n  [2/3] Enter your email (e.g., john@example.com): ";
     std::getline(std::cin, email);
     if (email == "exit") return;
 
     if (email.find('@') == std::string::npos || email.find('.') == std::string::npos) {
-        std::cout << "\n  Invalid email address!\n";
-        std::cout << "\n  Press Enter to return...";
+        std::cout << "\n  ✗ Invalid email address! Must contain @ and .\n";
+        std::cout << "\n  Press Enter to return to the main menu and try again...";
         std::cin.get();
         return;
     }
 
-    std::cout << "  Enter your password : ";
+    std::cout << "\n  [3/3] Enter your password (e.g., MyPass123!)\n";
+    std::cout << "        Requirements:\n";
+    std::cout << "        - Minimum 8 characters\n";
+    std::cout << "        - 1 uppercase letter (A-Z)\n";
+    std::cout << "        - 1 lowercase letter (a-z)\n";
+    std::cout << "        - 1 number (0-9)\n";
+    std::cout << "        - 1 symbol (!@#$%...)\n";
+    std::cout << "  Password: ";
     std::getline(std::cin, password);
     if (password == "exit") return;
 
@@ -128,31 +135,31 @@ void showRegistrationScreen() {
     }
 
     if (password.length() < 8) {
-        std::cout << "\n  Password must be at least 8 characters!\n";
+        std::cout << "\n  ✗ Password must be at least 8 characters! (You entered " << password.length() << ")\n";
         std::cout << "\n  Press Enter to return...";
         std::cin.get();
         return;
     }
     if (!hasUpper) {
-        std::cout << "\n  Password must contain at least one uppercase letter!\n";
+        std::cout << "\n  ✗ Password must contain at least one UPPERCASE letter (A-Z)\n";
         std::cout << "\n  Press Enter to return...";
         std::cin.get();
         return;
     }
     if (!hasLower) {
-        std::cout << "\n  Password must contain at least one lowercase letter!\n";
+        std::cout << "\n  ✗ Password must contain at least one lowercase letter (a-z)\n";
         std::cout << "\n  Press Enter to return...";
         std::cin.get();
         return;
     }
     if (!hasDigit) {
-        std::cout << "\n  Password must contain at least one number!\n";
+        std::cout << "\n  ✗ Password must contain at least one number (0-9)\n";
         std::cout << "\n  Press Enter to return...";
         std::cin.get();
         return;
     }
     if (!hasSymbol) {
-        std::cout << "\n  Password must contain at least one symbol (!@#$...)!\n";
+        std::cout << "\n  :) Password must contain at least one symbol (!@#$...)\n";
         std::cout << "\n  Press Enter to return...";
         std::cin.get();
         return;
@@ -161,9 +168,9 @@ void showRegistrationScreen() {
     bool success = userControl.register_new_public_user(userName, password, email);
 
     if (success) {
-        std::cout << "\n  Account created successfully! Welcome, " << userName << "!\n";
+        std::cout << "\n  :) Account created successfully! Welcome, " << userName << "!\n";
     } else {
-        std::cout << "\n  Registration failed. Email may already be taken.\n";
+        std::cout << "\n  :( Registration failed. Email may already be in use.\n";
     }
 
     std::cout << "\n  Press Enter to return...";
@@ -302,6 +309,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
         std::cout << "  \033[36m[6]\033[0m View Active Sessions\n";
         if (loggedInAdmin.adminId == 1) {
             std::cout << "  \033[36m[7]\033[0m Register New Admin\n";
+            std::cout << "  \033[36m[8]\033[0m Delete an Admin\n";
         }
         std::cout << "  \033[36m[0]\033[0m Logout\n\n";
 
