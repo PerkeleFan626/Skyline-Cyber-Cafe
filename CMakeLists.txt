@@ -23,3 +23,6 @@ add_executable(Cafe main.cpp
         SessionManager/SessionManager.cpp
         Security/SecurityManager.cpp
         Security/SecurityManager.h)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static")
+

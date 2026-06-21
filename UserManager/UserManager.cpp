@@ -181,3 +181,22 @@ bool UserManager::register_new_public_user(string username, string password, str
 
     return dbManager.add_public_user(newUser);
 }
+
+// ============================================================================
+// PUBLIC USER DUPLICATE VALIDATION ENGINE
+// ============================================================================
+bool UserManager::is_public_credential_taken(const string& targetUser, const string& targetEmail) {
+    vector<PublicUser> allUsers = dbManager.get_all_public_users();
+
+    for (const auto& user : allUsers) {
+        if (user.userName == targetUser) {
+            cout << "Registration Failed: The username '" << targetUser << "' is already taken.\n";
+            return true;
+        }
+        if (user.email == targetEmail) {
+            cout << "Registration Failed: The email '" << targetEmail << "' is already registered to an account.\n";
+            return true;
+        }
+    }
+    return false;
+}

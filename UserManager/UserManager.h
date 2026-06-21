@@ -20,6 +20,7 @@ public:
 
     // 3. Security Verification Gate
     bool authenticate_user(const string& username, const string& password, PublicUser& loggedInUser);
+    bool is_public_credential_taken(const string& targetUser, const string& targetEmail);
 
     // 4. Isolated Field Updates
     bool update_username(int searchId, const string& newName);
@@ -27,6 +28,6 @@ public:
     bool update_email(int searchId, const string& newEmail);
     bool update_total_bill(int searchId, double newBillAmount);
 
-    // 5. Account Registration & Unique ID Factory (Newly Added!)
+    // 5. Account Registration & Unique ID Factory
     bool register_new_public_user(string username, string password, string email);
 };
