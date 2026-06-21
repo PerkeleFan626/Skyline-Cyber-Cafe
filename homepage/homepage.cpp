@@ -46,11 +46,14 @@ void printCentered(const std::string& text, int width) {
 void displayAnimatedHomepage() {
     clearScreen();
 
+    // Top padding
+    for (int i = 0; i < 2; ++i) {
+        std::cout << "\n";
+    }
 
     std::cout << TEAL;
     printCentered("==========================================================================", CONSOLE_WIDTH);
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
 
     std::cout << BOLD << TEAL;
     printCentered("  ____   _  __ __   __ _      ___  _   _  _____ ", CONSOLE_WIDTH);
@@ -69,7 +72,6 @@ void displayAnimatedHomepage() {
     printCentered("==========================================================================", CONSOLE_WIDTH);
     std::cout << RESET;
 
-
     std::this_thread::sleep_for(std::chrono::milliseconds(150));
     std::cout << WHITE << BOLD;
     printCentered("CYBER CAFE AUTOMATED BILLING SYSTEM", CONSOLE_WIDTH);
@@ -80,16 +82,22 @@ void displayAnimatedHomepage() {
     printCentered("Auckland CBD Branch", CONSOLE_WIDTH);
     std::cout << RESET << "\n";
 
-
+    // Centered menu with padding
     std::cout << WHITE;
-    std::cout << "        " << TEAL << "[1]" << WHITE << " Register New User\n";
-    std::cout << "        " << TEAL << "[2]" << WHITE << " Customer Login (Start Session)\n";
-    std::cout << "        " << TEAL << "[3]" << WHITE << " Staff / Admin Portal\n";
-    std::cout << "        " << TEAL << "[4]" << WHITE << " Exit System\n\n";
+    printCentered("[1] Register New User", CONSOLE_WIDTH);
+    printCentered("[2] Customer Login (Start Session)", CONSOLE_WIDTH);
+    printCentered("[3] Staff / Admin Portal", CONSOLE_WIDTH);
+    printCentered("[4] Exit System", CONSOLE_WIDTH);
+    std::cout << "\n";
 
     std::cout << TEAL;
     printCentered("==========================================================================", CONSOLE_WIDTH);
     std::cout << RESET;
+
+    // Bottom padding
+    for (int i = 0; i < 7; ++i) {
+        std::cout << "\n";
+    }
 
     std::cout << "\n  " << BOLD << "Choice: " << RESET;
 }
@@ -612,59 +620,64 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
         std::cin >> choice;
 
         switch (choice) {
-
             case 1: {
-    clearScreen();
-    std::cout << "\033[36m==========================================================================\n";
-    std::cout << "         START SESSION\n";
-    std::cout << "==========================================================================\033[0m\n\n";
+                clearScreen();
 
-    bool started = sessionManager.start_new_session(loggedInUser.uniqueId);
+                std::cout << "\033[36m==========================================================================\n";
 
-    if (started) {
-        std::cout << "  Session started successfully!\n\n";
+                std::cout << "         START SESSION\n";
 
-        while (true) {
-            std::cout << "  \033[36m[1]\033[0m Add Internet Time (minutes)\n";
-            std::cout << "  \033[36m[2]\033[0m Add Gaming Time (minutes)\n";
-            std::cout << "  \033[36m[3]\033[0m Add Print Pages\n";
-            std::cout << "  \033[36m[4]\033[0m Add Scan Pages\n";
-            std::cout << "  \033[36m[0]\033[0m End Session & Checkout\n\n";
-            std::cout << "  Choice: ";
+                std::cout << "==========================================================================\033[0m\n\n";
 
-            int sessionChoice;
-            std::cin >> sessionChoice;
+                bool started = sessionManager.start_new_session(loggedInUser.uniqueId);
 
-            if (sessionChoice == 0) {
-                sessionManager.end_and_checkout_session(loggedInUser.uniqueId);
-                std::cout << "\n  Session ended! Thank you.\n";
-                std::cin.ignore(1000, '\n');
-                std::cin.get();
-                break;
+                if (started) {
+                    std::cout << "  Session started successfully!\n\n";
+
+                    while (true) {
+                        std::cout << "  \033[36m[1]\033[0m Add Internet Time (minutes)\n";
+
+                        std::cout << "  \033[36m[2]\033[0m Add Gaming Time (minutes)\n";
+
+                        std::cout << "  \033[36m[3]\033[0m Add Print Pages\n";
+
+                        std::cout << "  \033[36m[4]\033[0m Add Scan Pages\n";
+
+                        std::cout << "  \033[36m[0]\033[0m End Session & Checkout\n\n";
+
+                        std::cout << "  Choice: ";
+
+                        int sessionChoice;
+
+                        std::cin >> sessionChoice;
+
+                        if (sessionChoice == 0) {
+
+                            sessionManager.end_and_checkout_session(loggedInUser.uniqueId);
+
+                            std::cout << "\n  Session ended! Thank you.\n";
+
+                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 🟢 Clean buffer on checkout
+
+                            std::cin.get();
+
+                            break;
+
+                        }
+
+                        int amount;
+
+                        std::cout << "  Enter amount: ";
+
+                        std::cin >> amount;
+
+                        // 🟢 THE CRITICAL FIX: Flush out the leftover newline right after reading integers
+
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    }
+                }
             }
 
-            int amount;
-            std::cout << "  Enter amount: ";
-            std::cin >> amount;
-
-            if (sessionChoice == 1)
-                sessionManager.simulate_activity(loggedInUser.uniqueId, amount, 0, 0, 0);
-            else if (sessionChoice == 2)
-                sessionManager.simulate_activity(loggedInUser.uniqueId, 0, amount, 0, 0);
-            else if (sessionChoice == 3)
-                sessionManager.simulate_activity(loggedInUser.uniqueId, 0, 0, amount, 0);
-            else if (sessionChoice == 4)
-                sessionManager.simulate_activity(loggedInUser.uniqueId, 0, 0, 0, amount);
-
-            std::cout << "  Added!\n";
-        }
-    } else {
-        std::cout << "  Failed to start session.\n";
-        std::cin.ignore(1000, '\n');
-        std::cin.get();
-    }
-    break;
-}
             case 2: {
                 clearScreen();
                 std::cout << "\033[36m==========================================================================\n";
