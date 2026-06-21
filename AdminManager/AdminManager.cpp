@@ -94,7 +94,25 @@ bool AdminManager::register_new_admin(const AdminUser& currentAdmin, string newU
 }
 
 // ============================================================================
-// 4. ADMINISTRATIVE MANAGER DELETION ACTION
+// 4. ADMIN DUPLICATE VALIDATION ENGINE
+// ============================================================================
+
+bool AdminManager::is_admin_credential_taken(const string& targetUser) {
+
+    vector<AdminUser> allAdmins = dbManager.get_all_admins();
+
+    for (const auto& admin : allAdmins) {
+        if (admin.userName == targetUser) {
+            cout << "Registration Failed: The username '" << targetUser << "' is already in use.\n";
+            return true;
+        }
+    }
+    return false;
+}
+
+
+// ============================================================================
+// 5. ADMINISTRATIVE MANAGER DELETION ACTION
 // ============================================================================
 bool AdminManager::execute_admin_deletion(const AdminUser& currentAdmin, int targetAdminId) {
 
@@ -118,7 +136,7 @@ bool AdminManager::execute_admin_deletion(const AdminUser& currentAdmin, int tar
 }
 
 // ============================================================================
-// 5. AUDIT DATA HARVESTER CORE ENGINE
+// 6. AUDIT DATA HARVESTER CORE ENGINE
 // ============================================================================
 
 UserCompleteAudit AdminManager::compile_user_audit_packet(int userId) {
@@ -173,7 +191,7 @@ UserCompleteAudit AdminManager::compile_user_audit_packet(int userId) {
 }
 
 // ============================================================================
-// 6. BUSINESS INTEL MONITOR VISUAL INTERFACE
+// 7. BUSINESS INTEL MONITOR VISUAL INTERFACE
 // ============================================================================
 
 void AdminManager::print_user_audit_dashboard(int userId) {

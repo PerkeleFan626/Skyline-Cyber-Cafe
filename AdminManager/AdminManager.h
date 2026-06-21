@@ -18,10 +18,23 @@ private:
 public:
     AdminManager(DataManager& manager);
 
-    bool authenticate_admin(const string& email, const string& password, AdminUser& loggedInAdmin);
+    // ============================================================================
+    // 1. ADMINISTRATIVE PRIVILEGE MANAGEMENT (WRITE & DELETE)
+    // ============================================================================
+
     bool register_new_admin(const AdminUser& currentAdmin, string newUsername, string newPassword);
     bool execute_admin_deletion(const AdminUser& currentAdmin, int targetAdminId);
 
+    // ============================================================================
+    // 2. ADMINISTRATIVE SECURITY & IDENTITY ACCREDITATION
+    // ============================================================================
+    bool authenticate_admin(const string& username, const string& password, AdminUser& loggedInAdmin);
+    bool is_admin_credential_taken(const string& targetUser);
+
+
+    // ============================================================================
+    // 3. BUSINESS INTEL MONITOR & AUDITING DOSSIER
+    // ============================================================================
     UserCompleteAudit compile_user_audit_packet(int userId);
     void print_user_audit_dashboard(int userId);
 };
