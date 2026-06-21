@@ -18,7 +18,7 @@ SessionManager sessionManager(dbManager, transManager);
 
 const int CONSOLE_WIDTH = 80;
 
-// ANSI Color Escape Codes
+
 const std::string RESET   = "\033[0m";
 const std::string TEAL    = "\033[36m";
 const std::string WHITE   = "\033[37m";
@@ -95,20 +95,24 @@ void displayAnimatedHomepage() {
 }
 
 // Sub-Page Navigation Screens
-void showRegistrationScreen() {
+void showRegistrationHeader() {
     clearScreen();
     std::cout << "\033[36m==========================================================================\n";
     std::cout << "         SKYLINE CYBER CAFE - NEW USER REGISTRATION\n";
     std::cout << "==========================================================================\033[0m\n\n";
     std::cout << "  (Type 'exit' at any time to cancel)\n\n";
+}
+
+void showRegistrationScreen() {
+    showRegistrationHeader();
 
     std::string userName;
     std::string email;
     std::string password;
 
-    while (true) {
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+    while (true) {  // Retry loop
         std::cout << "  [1/3] Enter your name (e.g., John Smith): ";
         std::getline(std::cin, userName);
         if (userName == "exit") return;
@@ -119,24 +123,21 @@ void showRegistrationScreen() {
 
         if (email.find('@') == std::string::npos || email.find('.') == std::string::npos) {
             std::cout << "\n  ✗ Invalid email address! Must contain @ and .\n";
-            std::cout << "  Type 'back' to return to menu or press Enter twice to try again: ";
+            std::cout << "  Type 'back' to return to menu or press Enter to try again: ";
             std::string retry;
             std::getline(std::cin, retry);
             if (retry == "back") return;
-            clearScreen();
-            std::cout << "\033[36m==========================================================================\n";
-            std::cout << "         SKYLINE CYBER CAFE - NEW USER REGISTRATION\n";
-            std::cout << "==========================================================================\033[0m\n\n";
+            showRegistrationHeader();
             continue;
         }
 
         std::cout << "\n  [3/3] Enter your password (e.g., MyPass123!)\n";
         std::cout << "        Requirements:\n";
-        std::cout << "        • Minimum 8 characters\n";
-        std::cout << "        • 1 uppercase letter (A-Z)\n";
-        std::cout << "        • 1 lowercase letter (a-z)\n";
-        std::cout << "        • 1 number (0-9)\n";
-        std::cout << "        • 1 symbol (!@#$%...)\n";
+        std::cout << "         Minimum 8 characters\n";
+        std::cout << "         1 uppercase letter (A-Z)\n";
+        std::cout << "         1 lowercase letter (a-z)\n";
+        std::cout << "         1 number (0-9)\n";
+        std::cout << "         1 symbol (!@#$%...)\n";
         std::cout << "  Password: ";
         std::getline(std::cin, password);
         if (password == "exit") return;
@@ -168,10 +169,7 @@ void showRegistrationScreen() {
             std::string retry;
             std::getline(std::cin, retry);
             if (retry == "back") return;
-            clearScreen();
-            std::cout << "\033[36m==========================================================================\n";
-            std::cout << "         SKYLINE CYBER CAFE - NEW USER REGISTRATION\n";
-            std::cout << "==========================================================================\033[0m\n\n";
+            showRegistrationHeader();
             continue;
         }
 
@@ -179,7 +177,7 @@ void showRegistrationScreen() {
         bool success = userControl.register_new_public_user(userName, password, email);
 
         if (success) {
-            std::cout << "\n  ✓ Account created successfully! Welcome, " << userName << "!\n";
+            std::cout << "\n  :) Account created successfully! Welcome, " << userName << "!\n";
             std::cout << "\n  Press Enter to return...";
             std::cin.get();
             return;
@@ -189,10 +187,7 @@ void showRegistrationScreen() {
             std::string retry;
             std::getline(std::cin, retry);
             if (retry == "back") return;
-            clearScreen();
-            std::cout << "\033[36m==========================================================================\n";
-            std::cout << "         SKYLINE CYBER CAFE - NEW USER REGISTRATION\n";
-            std::cout << "==========================================================================\033[0m\n\n";
+            showRegistrationHeader();
             continue;
         }
     }
@@ -723,6 +718,8 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                     }
                 }
 
+                std::cout << "\033[36m==========================================================================\033[0m\n";
+                std::cout << "\n  Press Enter to return...";
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
@@ -736,7 +733,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 break;
 
             case 0:
-                std::cout << "\n  Goodbye, " << loggedInUser.userName << "! See you soon.\n";
+                std::cout << "\n  Goodbye, " << loggedInUser.userName << "! Press enter to go back to main menu. See you soon!\n";
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 return;
@@ -770,8 +767,12 @@ void showPricePlans() {
     std::cout << "  SCANNING\n";
     std::cout << "  --------\n";
     std::cout << "  $0.50 per page\n\n";
-}
 
+    std::cout << "\033[36m==========================================================================\033[0m\n";
+    std::cout << "\n  Press Enter to return...";
+    std::cin.ignore(1000, '\n');
+    std::cin.get();
+}
 void showEditProfile(PublicUser& loggedInUser) {
     clearScreen();
     std::cout << "\033[36m==========================================================================\n";
