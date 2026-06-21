@@ -49,25 +49,33 @@ void displayAnimatedHomepage() {
 
     std::cout << TEAL;
     printCentered("==========================================================================", CONSOLE_WIDTH);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-    // Drawing the Huge Skyline Text line-by-line
+
     std::cout << BOLD << TEAL;
     printCentered("  ____   _  __ __   __ _      ___  _   _  _____ ", CONSOLE_WIDTH);
+    std::this_thread::sleep_for(std::chrono::milliseconds(60));
     printCentered(" / ___| | |/ / \\ \\ / /| |    |_ _|| \\ | || ____|", CONSOLE_WIDTH);
+    std::this_thread::sleep_for(std::chrono::milliseconds(60));
     printCentered(" \\___ \\ | ' /   \\ V / | |     | | |  \\| ||  _|  ", CONSOLE_WIDTH);
+    std::this_thread::sleep_for(std::chrono::milliseconds(60));
     printCentered("  ___) || . \\    | |  | |___  | | | |\\  || |___ ", CONSOLE_WIDTH);
+    std::this_thread::sleep_for(std::chrono::milliseconds(60));
     printCentered(" |____/ |_|\\_\\   |_|  |_____||___||_| \\_||_____|", CONSOLE_WIDTH);
     std::cout << RESET;
 
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     std::cout << TEAL;
     printCentered("==========================================================================", CONSOLE_WIDTH);
     std::cout << RESET;
 
-    // Sub-headers
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(150));
     std::cout << WHITE << BOLD;
     printCentered("CYBER CAFE AUTOMATED BILLING SYSTEM", CONSOLE_WIDTH);
     std::cout << RESET;
 
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     std::cout << GRAY;
     printCentered("Auckland CBD Branch", CONSOLE_WIDTH);
     std::cout << RESET << "\n";
@@ -98,83 +106,96 @@ void showRegistrationScreen() {
     std::string email;
     std::string password;
 
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    while (true) {
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    std::cout << "  [1/3] Enter your name (e.g., John Smith): ";
-    std::getline(std::cin, userName);
-    if (userName == "exit") return;
+        std::cout << "  [1/3] Enter your name (e.g., John Smith): ";
+        std::getline(std::cin, userName);
+        if (userName == "exit") return;
 
-    std::cout << "\n  [2/3] Enter your email (e.g., john@example.com): ";
-    std::getline(std::cin, email);
-    if (email == "exit") return;
+        std::cout << "\n  [2/3] Enter your email (e.g., john@example.com): ";
+        std::getline(std::cin, email);
+        if (email == "exit") return;
 
-    if (email.find('@') == std::string::npos || email.find('.') == std::string::npos) {
-        std::cout << "\n  ✗ Invalid email address! Must contain @ and .\n";
-        std::cout << "\n  Press Enter to return to the main menu and try again...";
-        std::cin.get();
-        return;
+        if (email.find('@') == std::string::npos || email.find('.') == std::string::npos) {
+            std::cout << "\n  ✗ Invalid email address! Must contain @ and .\n";
+            std::cout << "  Type 'back' to return to menu or press Enter twice to try again: ";
+            std::string retry;
+            std::getline(std::cin, retry);
+            if (retry == "back") return;
+            clearScreen();
+            std::cout << "\033[36m==========================================================================\n";
+            std::cout << "         SKYLINE CYBER CAFE - NEW USER REGISTRATION\n";
+            std::cout << "==========================================================================\033[0m\n\n";
+            continue;
+        }
+
+        std::cout << "\n  [3/3] Enter your password (e.g., MyPass123!)\n";
+        std::cout << "        Requirements:\n";
+        std::cout << "        • Minimum 8 characters\n";
+        std::cout << "        • 1 uppercase letter (A-Z)\n";
+        std::cout << "        • 1 lowercase letter (a-z)\n";
+        std::cout << "        • 1 number (0-9)\n";
+        std::cout << "        • 1 symbol (!@#$%...)\n";
+        std::cout << "  Password: ";
+        std::getline(std::cin, password);
+        if (password == "exit") return;
+
+        bool hasUpper = false, hasLower = false, hasDigit = false, hasSymbol = false;
+        for (char c : password) {
+            if (isupper(c)) hasUpper = true;
+            if (islower(c)) hasLower = true;
+            if (isdigit(c)) hasDigit = true;
+            if (ispunct(c)) hasSymbol = true;
+        }
+
+        std::string errorMsg = "";
+        if (password.length() < 8) {
+            errorMsg = "  ✗ Password must be at least 8 characters! (You entered " + std::to_string(password.length()) + ")\n";
+        } else if (!hasUpper) {
+            errorMsg = "  ✗ Password must contain at least one UPPERCASE letter (A-Z)\n";
+        } else if (!hasLower) {
+            errorMsg = "  ✗ Password must contain at least one lowercase letter (a-z)\n";
+        } else if (!hasDigit) {
+            errorMsg = "  ✗ Password must contain at least one number (0-9)\n";
+        } else if (!hasSymbol) {
+            errorMsg = "  ✗ Password must contain at least one symbol (!@#$...)\n";
+        }
+
+        if (!errorMsg.empty()) {
+            std::cout << "\n" << errorMsg;
+            std::cout << "  Type 'back' to return to menu or press Enter to try again: ";
+            std::string retry;
+            std::getline(std::cin, retry);
+            if (retry == "back") return;
+            clearScreen();
+            std::cout << "\033[36m==========================================================================\n";
+            std::cout << "         SKYLINE CYBER CAFE - NEW USER REGISTRATION\n";
+            std::cout << "==========================================================================\033[0m\n\n";
+            continue;
+        }
+
+
+        bool success = userControl.register_new_public_user(userName, password, email);
+
+        if (success) {
+            std::cout << "\n  ✓ Account created successfully! Welcome, " << userName << "!\n";
+            std::cout << "\n  Press Enter to return...";
+            std::cin.get();
+            return;
+        } else {
+            std::cout << "\n  ✗ Registration failed. Email may already be in use.\n";
+            std::cout << "  Type 'back' to return to menu or press Enter to try again: ";
+            std::string retry;
+            std::getline(std::cin, retry);
+            if (retry == "back") return;
+            clearScreen();
+            std::cout << "\033[36m==========================================================================\n";
+            std::cout << "         SKYLINE CYBER CAFE - NEW USER REGISTRATION\n";
+            std::cout << "==========================================================================\033[0m\n\n";
+            continue;
+        }
     }
-
-    std::cout << "\n  [3/3] Enter your password (e.g., MyPass123!)\n";
-    std::cout << "        Requirements:\n";
-    std::cout << "        - Minimum 8 characters\n";
-    std::cout << "        - 1 uppercase letter (A-Z)\n";
-    std::cout << "        - 1 lowercase letter (a-z)\n";
-    std::cout << "        - 1 number (0-9)\n";
-    std::cout << "        - 1 symbol (!@#$%...)\n";
-    std::cout << "  Password: ";
-    std::getline(std::cin, password);
-    if (password == "exit") return;
-
-    bool hasUpper = false, hasLower = false, hasDigit = false, hasSymbol = false;
-    for (char c : password) {
-        if (isupper(c)) hasUpper = true;
-        if (islower(c)) hasLower = true;
-        if (isdigit(c)) hasDigit = true;
-        if (ispunct(c)) hasSymbol = true;
-    }
-
-    if (password.length() < 8) {
-        std::cout << "\n  ✗ Password must be at least 8 characters! (You entered " << password.length() << ")\n";
-        std::cout << "\n  Press Enter to return...";
-        std::cin.get();
-        return;
-    }
-    if (!hasUpper) {
-        std::cout << "\n  ✗ Password must contain at least one UPPERCASE letter (A-Z)\n";
-        std::cout << "\n  Press Enter to return...";
-        std::cin.get();
-        return;
-    }
-    if (!hasLower) {
-        std::cout << "\n  ✗ Password must contain at least one lowercase letter (a-z)\n";
-        std::cout << "\n  Press Enter to return...";
-        std::cin.get();
-        return;
-    }
-    if (!hasDigit) {
-        std::cout << "\n  ✗ Password must contain at least one number (0-9)\n";
-        std::cout << "\n  Press Enter to return...";
-        std::cin.get();
-        return;
-    }
-    if (!hasSymbol) {
-        std::cout << "\n  :) Password must contain at least one symbol (!@#$...)\n";
-        std::cout << "\n  Press Enter to return...";
-        std::cin.get();
-        return;
-    }
-
-    bool success = userControl.register_new_public_user(userName, password, email);
-
-    if (success) {
-        std::cout << "\n  :) Account created successfully! Welcome, " << userName << "!\n";
-    } else {
-        std::cout << "\n  :( Registration failed. Email may already be in use.\n";
-    }
-
-    std::cout << "\n  Press Enter to return...";
-    std::cin.get();
 }
 
 void showLoginScreen() {
