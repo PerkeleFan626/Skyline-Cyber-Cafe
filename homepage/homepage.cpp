@@ -782,11 +782,9 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 break;
 
             case 0:
-                std::cout << "\n  Goodbye, " << loggedInUser.userName << "! Press enter to go back to main menu. See you soon!\n";
-                std::cin.ignore(1000, '\n');
-                std::cin.get();
+                std::cout << "\n  Goodbye, " << loggedInUser.userName << "! Press Enter to go back to main menu.\n";
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 return;
-
             default:
                 std::cout << "\n  Invalid option.\n";
                 std::cin.ignore(1000, '\n');
