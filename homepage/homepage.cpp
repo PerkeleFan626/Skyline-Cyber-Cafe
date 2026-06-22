@@ -621,6 +621,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
 
         switch (choice) {
             case 1: {
+
                 clearScreen();
 
                 std::cout << "\033[36m==========================================================================\n";
@@ -632,9 +633,22 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 bool started = sessionManager.start_new_session(loggedInUser.uniqueId);
 
                 if (started) {
+
                     std::cout << "  Session started successfully!\n\n";
 
+
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
                     while (true) {
+
+                        clearScreen();
+
+                        std::cout << "\033[36m==========================================================================\n";
+
+                        std::cout << "         ACTIVE SESSION MANAGEMENT PANEL\n";
+
+                        std::cout << "==========================================================================\033[0m\n\n";
+
                         std::cout << "  \033[36m[1]\033[0m Add Internet Time (minutes)\n";
 
                         std::cout << "  \033[36m[2]\033[0m Add Gaming Time (minutes)\n";
@@ -649,7 +663,15 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
 
                         int sessionChoice;
 
-                        std::cin >> sessionChoice;
+                        if (!(std::cin >> sessionChoice)) {
+
+                            std::cin.clear();
+
+                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                            continue;
+
+                        }
 
                         if (sessionChoice == 0) {
 
@@ -657,7 +679,9 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
 
                             std::cout << "\n  Session ended! Thank you.\n";
 
-                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 🟢 Clean buffer on checkout
+                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                            std::cout << "  Press Enter to return to main dashboard...";
 
                             std::cin.get();
 
@@ -665,18 +689,85 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
 
                         }
 
+                        if (sessionChoice < 1 || sessionChoice > 4) {
+
+                            std::cout << "\n  ❌ Invalid choice. Press Enter to try again...";
+
+                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                            std::cin.get();
+
+                            continue;
+
+                        }
+
                         int amount;
 
                         std::cout << "  Enter amount: ";
 
-                        std::cin >> amount;
+                        if (!(std::cin >> amount)) {
 
-                        // 🟢 THE CRITICAL FIX: Flush out the leftover newline right after reading integers
+                            std::cin.clear();
+
+                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                            std::cout << "\n  ❌ Invalid quantity input. Press Enter to try again...";
+
+                            std::cin.get();
+
+                            continue;
+
+                        }
+
+
 
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                        // 🟢 RESTORED: Passes the variables down into the actual business engine
+
+                        if (sessionChoice == 1)
+
+                            sessionManager.simulate_activity(loggedInUser.uniqueId, amount, 0, 0, 0);
+
+                        else if (sessionChoice == 2)
+
+                            sessionManager.simulate_activity(loggedInUser.uniqueId, 0, amount, 0, 0);
+
+                        else if (sessionChoice == 3)
+
+                            sessionManager.simulate_activity(loggedInUser.uniqueId, 0, 0, amount, 0);
+
+                        else if (sessionChoice == 4)
+
+                            sessionManager.simulate_activity(loggedInUser.uniqueId, 0, 0, 0, amount);
+
+
+
+                        std::cout << "\n  ✨ Activity successfully added to your running session metrics!\n";
+
+                        std::cout << "  Press Enter to continue tracking options...";
+
+                        std::cin.get();
+
                     }
+
+                } else {
+
+                    std::cout << "  ⚠️ Failed to start session or a session is already active.\n";
+
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                    std::cout << "  Press Enter to return...";
+
+                    std::cin.get();
+
                 }
+
+                break;
+
             }
+
+
 
             case 2: {
                 clearScreen();
@@ -786,6 +877,7 @@ void showPricePlans() {
     std::cin.ignore(1000, '\n');
     std::cin.get();
 }
+
 void showEditProfile(PublicUser& loggedInUser) {
     clearScreen();
     std::cout << "\033[36m==========================================================================\n";
