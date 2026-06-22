@@ -43,10 +43,10 @@ bool SessionManager::simulate_activity(int userId, int addInternet, int addGamin
     if (!sessionFound) {
         if (!sessionFound) {
             cout << "Error: Cannot log activity. No active session found for User ID: " << userId << endl;
+            return false;
         }
-        return sessionFound;
     }
-
+    return true;
 }
 
 bool SessionManager::end_and_checkout_session(int userId) {
