@@ -3,6 +3,8 @@
 
 
 
+
+
 int main() {
     int choice = 0;
     bool running = true;
@@ -31,6 +33,7 @@ int main() {
             case 4:
                 clearScreen();
                 std::cout << "\nShutting down Skyline System. Goodbye!\n";
+
                 running = false;          // Breaks the core loop completely
                 break;
             default:

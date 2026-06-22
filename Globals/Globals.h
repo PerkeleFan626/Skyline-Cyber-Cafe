@@ -12,3 +12,4 @@ namespace filePath {
     inline const string SESSION_FILE = "user_sessions.csv";
     inline const string HISTORY_FILE = "user_history.csv";
 }
+
