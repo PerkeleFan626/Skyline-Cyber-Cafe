@@ -16,7 +16,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin);
 void showUserDashboard(PublicUser& loggedInUser);
 void showPricePlans();
 void showEditProfile(PublicUser& loggedInUser);
-
+void showRegistrationHeader();
 
 
 #endif

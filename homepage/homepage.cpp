@@ -46,7 +46,7 @@ void printCentered(const std::string& text, int width) {
 void displayAnimatedHomepage() {
     clearScreen();
 
-    // Top padding
+
     for (int i = 0; i < 2; ++i) {
         std::cout << "\n";
     }
@@ -82,7 +82,7 @@ void displayAnimatedHomepage() {
     printCentered("Auckland CBD Branch", CONSOLE_WIDTH);
     std::cout << RESET << "\n";
 
-    // Centered menu with padding
+
     std::cout << WHITE;
     printCentered("[1] Register New User", CONSOLE_WIDTH);
     printCentered("[2] Customer Login (Start Session)", CONSOLE_WIDTH);
@@ -101,8 +101,6 @@ void displayAnimatedHomepage() {
 
     std::cout << "\n  " << BOLD << "Choice: " << RESET;
 }
-
-// Sub-Page Navigation Screens
 void showRegistrationHeader() {
     clearScreen();
     std::cout << "\033[36m==========================================================================\n";
@@ -110,7 +108,6 @@ void showRegistrationHeader() {
     std::cout << "==========================================================================\033[0m\n\n";
     std::cout << "  (Type 'exit' at any time to cancel)\n\n";
 }
-
 void showRegistrationScreen() {
     showRegistrationHeader();
 
@@ -131,6 +128,16 @@ void showRegistrationScreen() {
 
         if (email.find('@') == std::string::npos || email.find('.') == std::string::npos) {
             std::cout << "\n  ✗ Invalid email address! Must contain @ and .\n";
+            std::cout << "  Type 'back' to return to menu or press Enter to try again: ";
+            std::string retry;
+            std::getline(std::cin, retry);
+            if (retry == "back") return;
+            showRegistrationHeader();
+            continue;
+        }
+
+        // Check if username or email already taken
+        if (userControl.is_public_credential_taken(userName, email)) {
             std::cout << "  Type 'back' to return to menu or press Enter to try again: ";
             std::string retry;
             std::getline(std::cin, retry);
@@ -160,15 +167,15 @@ void showRegistrationScreen() {
 
         std::string errorMsg = "";
         if (password.length() < 8) {
-            errorMsg = "  ✗ Password must be at least 8 characters! (You entered " + std::to_string(password.length()) + ")\n";
+            errorMsg = "   Password must be at least 8 characters! (You entered " + std::to_string(password.length()) + ")\n";
         } else if (!hasUpper) {
-            errorMsg = "  ✗ Password must contain at least one UPPERCASE letter (A-Z)\n";
+            errorMsg = "   Password must contain at least one UPPERCASE letter (A-Z)\n";
         } else if (!hasLower) {
-            errorMsg = "  ✗ Password must contain at least one lowercase letter (a-z)\n";
+            errorMsg = "   Password must contain at least one lowercase letter (a-z)\n";
         } else if (!hasDigit) {
-            errorMsg = "  ✗ Password must contain at least one number (0-9)\n";
+            errorMsg = "   Password must contain at least one number (0-9)\n";
         } else if (!hasSymbol) {
-            errorMsg = "  ✗ Password must contain at least one symbol (!@#$...)\n";
+            errorMsg = "   Password must contain at least one symbol (!@#$...)\n";
         }
 
         if (!errorMsg.empty()) {
@@ -181,7 +188,7 @@ void showRegistrationScreen() {
             continue;
         }
 
-
+        // All validation passed, try to register
         bool success = userControl.register_new_public_user(userName, password, email);
 
         if (success) {
@@ -190,7 +197,7 @@ void showRegistrationScreen() {
             std::cin.get();
             return;
         } else {
-            std::cout << "\n  ✗ Registration failed. Email may already be in use.\n";
+            std::cout << "\n  ✗ Registration failed. Please try again.\n";
             std::cout << "  Type 'back' to return to menu or press Enter to try again: ";
             std::string retry;
             std::getline(std::cin, retry);
@@ -200,6 +207,7 @@ void showRegistrationScreen() {
         }
     }
 }
+
 
 void showLoginScreen() {
     clearScreen();
@@ -609,7 +617,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
         std::cout << "  \033[36m[1]\033[0m Start Session\n";
         std::cout << "  \033[36m[2]\033[0m View My Sessions\n";
         std::cout << "  \033[36m[3]\033[0m View My Bill\n";
-        std::cout << "  \033[36m[4]\033[0m View Price Plans\n";
+        std::cout << "  \033[36m[4]\033[0m Checkout Session\n";
         std::cout << "  \033[36m[5]\033[0m Edit My Profile\n";
         std::cout << "  \033[36m[0]\033[0m Logout\n\n";
 
@@ -617,157 +625,74 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
 
         int choice;
         std::cout << "  Choice: ";
-        std::cin >> choice;
+        if (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "\n  Invalid input! Please enter a number.\n";
+            std::cout << "  Press Enter to try again...";
+            std::cin.get();
+            continue;
+        }
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
             case 1: {
-
                 clearScreen();
-
                 std::cout << "\033[36m==========================================================================\n";
-
                 std::cout << "         START SESSION\n";
-
                 std::cout << "==========================================================================\033[0m\n\n";
 
                 bool started = sessionManager.start_new_session(loggedInUser.uniqueId);
 
                 if (started) {
-
                     std::cout << "  Session started successfully!\n\n";
 
-
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
                     while (true) {
-
-                        clearScreen();
-
-                        std::cout << "\033[36m==========================================================================\n";
-
-                        std::cout << "         ACTIVE SESSION MANAGEMENT PANEL\n";
-
-                        std::cout << "==========================================================================\033[0m\n\n";
-
                         std::cout << "  \033[36m[1]\033[0m Add Internet Time (minutes)\n";
-
                         std::cout << "  \033[36m[2]\033[0m Add Gaming Time (minutes)\n";
-
                         std::cout << "  \033[36m[3]\033[0m Add Print Pages\n";
-
                         std::cout << "  \033[36m[4]\033[0m Add Scan Pages\n";
-
-                        std::cout << "  \033[36m[0]\033[0m End Session & Checkout\n\n";
-
+                        std::cout << "  \033[36m[0]\033[0m Return to Dashboard\n\n";
                         std::cout << "  Choice: ";
 
                         int sessionChoice;
-
-                        if (!(std::cin >> sessionChoice)) {
-
-                            std::cin.clear();
-
-                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-                            continue;
-
-                        }
+                        std::cin >> sessionChoice;
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
                         if (sessionChoice == 0) {
-
-                            sessionManager.end_and_checkout_session(loggedInUser.uniqueId);
-
-                            std::cout << "\n  Session ended! Thank you.\n";
-
-                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-                            std::cout << "  Press Enter to return to main dashboard...";
-
+                            std::cout << "\n  Hit enter to return to dashboard\n";
                             std::cin.get();
-
                             break;
-
                         }
 
                         if (sessionChoice < 1 || sessionChoice > 4) {
-
-                            std::cout << "\n  ❌ Invalid choice. Press Enter to try again...";
-
-                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-                            std::cin.get();
-
+                            std::cout << "  Invalid choice!\n\n";
                             continue;
-
                         }
 
                         int amount;
-
                         std::cout << "  Enter amount: ";
-
-                        if (!(std::cin >> amount)) {
-
-                            std::cin.clear();
-
-                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-                            std::cout << "\n  ❌ Invalid quantity input. Press Enter to try again...";
-
-                            std::cin.get();
-
-                            continue;
-
-                        }
-
-
-
+                        std::cin >> amount;
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-                        // 🟢 RESTORED: Passes the variables down into the actual business engine
-
                         if (sessionChoice == 1)
-
                             sessionManager.simulate_activity(loggedInUser.uniqueId, amount, 0, 0, 0);
-
                         else if (sessionChoice == 2)
-
                             sessionManager.simulate_activity(loggedInUser.uniqueId, 0, amount, 0, 0);
-
                         else if (sessionChoice == 3)
-
                             sessionManager.simulate_activity(loggedInUser.uniqueId, 0, 0, amount, 0);
-
                         else if (sessionChoice == 4)
-
                             sessionManager.simulate_activity(loggedInUser.uniqueId, 0, 0, 0, amount);
 
-
-
-                        std::cout << "\n  ✨ Activity successfully added to your running session metrics!\n";
-
-                        std::cout << "  Press Enter to continue tracking options...";
-
-                        std::cin.get();
-
+                        std::cout << "  Added!\n\n";
                     }
-
                 } else {
-
-                    std::cout << "  ⚠️ Failed to start session or a session is already active.\n";
-
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-                    std::cout << "  Press Enter to return...";
-
+                    std::cout << "  Failed to start session.\n";
+                    std::cin.ignore(1000, '\n');
                     std::cin.get();
-
                 }
-
                 break;
-
             }
-
-
 
             case 2: {
                 clearScreen();
@@ -793,10 +718,13 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                     std::cout << "  No active sessions found.\n";
                 }
 
+                std::cout << "\033[36m==========================================================================\033[0m\n";
+                std::cout << "\n  Press Enter to return...";
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 break;
             }
+
             case 3: {
                 clearScreen();
                 std::cout << "\033[36m==========================================================================\n";
@@ -829,9 +757,26 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 break;
             }
 
-            case 4:
-                showPricePlans();
+            case 4: {
+                clearScreen();
+                std::cout << "\033[36m==========================================================================\n";
+                std::cout << "         CHECKOUT SESSION\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                bool checkedOut = sessionManager.end_and_checkout_session(loggedInUser.uniqueId);
+
+                if (checkedOut) {
+                    std::cout << "\n  Checkout successful! Thank you for using Skyline Cyber Cafe.\n";
+                } else {
+                    std::cout << "\n  No active session to checkout.\n";
+                }
+
+                std::cout << "\n  Press Enter to return to dashboard...";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
                 break;
+            }
+
             case 5:
                 showEditProfile(loggedInUser);
                 break;
@@ -841,6 +786,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
                 return;
+
             default:
                 std::cout << "\n  Invalid option.\n";
                 std::cin.ignore(1000, '\n');
