@@ -21,6 +21,7 @@ bool SessionManager::start_new_session(int userId) {
     return false;
 }
 
+
 bool SessionManager::simulate_activity(int userId, int addInternet, int addGaming, int addPrints, int addScans) {
     vector<UserSession> activeSessions = dbManager.get_all_sessions();
     bool sessionFound = false;
@@ -34,7 +35,7 @@ bool SessionManager::simulate_activity(int userId, int addInternet, int addGamin
 
             dbManager.add_active_session(session);
             sessionFound = true;
-            cout << "Activity Recorded: User " << userId << " metrics modified in sessions.csv\n";
+            cout << "Activity Recorded: User " << userId << " metrics modified \n";
             break;
         }
     }
