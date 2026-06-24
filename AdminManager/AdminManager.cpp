@@ -209,10 +209,10 @@ void AdminManager::print_user_audit_dashboard(int userId) {
 
 
     cout << " [A] CUSTOMER PROFILE DETAILS:\n";
-    cout << "• User ID:          " << audit.profile.uniqueId << "\n";
-    cout << "• Account Username: " << audit.profile.userName << "\n";
-    cout << "• Contact Email:    " << audit.profile.email << "\n";
-    cout << "• Historical Bill:  $" << audit.profile.totalBill << " (Lifetime Accumulated)\n";
+    cout << "- User ID:          " << audit.profile.uniqueId << "\n";
+    cout << "- Account Username: " << audit.profile.userName << "\n";
+    cout << "- Contact Email:    " << audit.profile.email << "\n";
+    cout << "- Historical Bill:  $" << audit.profile.totalBill << " (Lifetime Accumulated)\n";
     cout << "--------------------------------------------------------\n";
 
 
@@ -227,10 +227,10 @@ void AdminManager::print_user_audit_dashboard(int userId) {
         double pendingTotal = pendingInternet + pendingGaming + pendingPrints + pendingScans;
 
         cout << "Status: ONLINE (Actively occupied terminal context)\n";
-        cout << "• Internet Tracking: " << audit.activeSession.internetMinutes << " mins  --> Pending Charge: $" << pendingInternet << "\n";
-        cout << "• Gaming Tracking: " << audit.activeSession.gamingMinutes << " mins  --> Pending Charge: $" << pendingGaming << "\n";
-        cout << "• Printer Tally: " << audit.activeSession.printsCount << " pages --> Pending Charge: $" << pendingPrints << "\n";
-        cout << "• Scanner Tally: " << audit.activeSession.scansCount << " docs  --> Pending Charge: $" << pendingScans << "\n";
+        cout << "- Internet Tracking: " << audit.activeSession.internetMinutes << " mins  --> Pending Charge: $" << pendingInternet << "\n";
+        cout << "- Gaming Tracking: " << audit.activeSession.gamingMinutes << " mins  --> Pending Charge: $" << pendingGaming << "\n";
+        cout << "- Printer Tally: " << audit.activeSession.printsCount << " pages --> Pending Charge: $" << pendingPrints << "\n";
+        cout << "- Scanner Tally: " << audit.activeSession.scansCount << " docs  --> Pending Charge: $" << pendingScans << "\n";
         cout << ">> PROJECTED SESSION TOTAL DUE UPON CHECKOUT: $" << pendingTotal << "\n";
     }
     cout << "--------------------------------------------------------\n";
@@ -238,7 +238,7 @@ void AdminManager::print_user_audit_dashboard(int userId) {
 
     cout << " [C] SETTLED HISTORICAL AUDIT TRAIL:\n";
     if (audit.paymentHistory.empty()) {
-        cout << "• No historical transaction records found for this account line.\n";
+        cout << "- No historical transaction records found for this account line.\n";
     } else {
         cout << " Found (" << audit.paymentHistory.size() << ") completed session invoices associated with this ID:\n\n";
         int transactionCounter = 1;

@@ -1,10 +1,6 @@
 #include <iostream>
 #include "homepage/homepage.hpp"
 
-
-
-
-
 int main() {
     int choice = 0;
     bool running = true;
