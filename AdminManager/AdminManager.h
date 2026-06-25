@@ -37,4 +37,5 @@ public:
     // ============================================================================
     UserCompleteAudit compile_user_audit_packet(int userId);
     void print_user_audit_dashboard(int userId);
+    void display_financial_revenue_report();
 };
