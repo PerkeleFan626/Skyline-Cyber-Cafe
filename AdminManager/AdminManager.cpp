@@ -190,6 +190,54 @@ UserCompleteAudit AdminManager::compile_user_audit_packet(int userId) {
     return auditPacket;
 }
 
+void AdminManager::display_financial_revenue_report() {
+    vector<PublicUser> allUsers = dbManager.get_all_public_users();
+    vector<UserSession> activeSessions = dbManager.get_all_sessions();
+
+    cout << fixed << setprecision(2);
+    cout << "\n========================================================\n";
+    cout << "          SKYLINE CYBER CAFE GLOBAL REVENUE REPORT       \n";
+    cout << "========================================================\n";
+
+    double totalHistoricalCash = 0;
+    for (const auto& user : allUsers) {
+        totalHistoricalCash += user.totalBill;
+    }
+
+    std::cout << " [A] CURRENT REVENUE EARNED (Settled Lifetime Accounts):\n";
+    std::cout << "- Total Registered Accounts: " << allUsers.size() << "\n";
+    std::cout << "- Total Realized Cash Collected: \033[32m$" << totalHistoricalCash << "\033[0m\n";
+    std::cout << "--------------------------------------------------------\n";
+
+    double upcomingInternet = 0;
+    double upcomingGaming = 0;
+    double upcomingPrints = 0;
+    double upcomingScans = 0;
+
+    for (const auto& session : activeSessions) {
+        upcomingInternet += session.internetMinutes * INTERNET_RATE;
+        upcomingGaming += session.gamingMinutes * GAMING_RATE;
+        upcomingPrints += session.printsCount * PRINT_RATE;
+        upcomingScans += session.scansCount * SCAN_RATE;
+    }
+    double totalUpcomingRevenue = upcomingInternet + upcomingGaming + upcomingPrints + upcomingScans;
+
+    cout << " [B] UPCOMING REVENUE (Unpaid Active Terminal Pipelines):\n";
+    cout << "- Active Occupied Terminals: " << activeSessions.size() << "\n";
+    cout << "- Pending Internet Yield:    $" << upcomingInternet << "\n";
+    cout << "- Pending Gaming Yield:      $" << upcomingGaming << "\n";
+    cout << "- Pending Printing Tally:    $" << upcomingPrints << "\n";
+    cout << "- Pending Scanning Tally:    $" << upcomingScans << "\n";
+    cout << "- Total Expected Payments:   \033[33m$" << totalUpcomingRevenue << "\033[0m\n";
+    cout << "--------------------------------------------------------\n";
+
+    double overallGrandTotal = totalHistoricalCash + totalUpcomingRevenue;
+
+    cout << " [C] OVERALL BUSINESS ACCRUAL MATRIX:\n";
+    cout << "- NET RUNNING ACCRUED VALUE: \033[1;36m$" << overallGrandTotal << "\033[0m\n";
+    cout << "========================================================\n\n";
+}
+
 // ============================================================================
 // 7. BUSINESS INTEL MONITOR VISUAL INTERFACE
 // ============================================================================
