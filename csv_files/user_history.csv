@@ -1,3 +1,6 @@
 userId,internetPaid,gamingPaid,printsPaid,scansPaid,totalPaid
 1001,3,9,0,0,12
 1002,3,4.5,0.5,0.5,8.5
+1003,6,6.75,0,0,12.75
+1003,15,30,0,0,45
+1003,2,4.5,0,0,6.5

@@ -339,9 +339,10 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
         std::cout << "  \033[36m[4]\033[0m View All Usernames\n";
         std::cout << "  \033[36m[5]\033[0m Full User Audit\n";
         std::cout << "  \033[36m[6]\033[0m View Active Sessions\n";
+        std::cout << "  \033[36m[7]\033[0m View Revenue Report\n";
         if (loggedInAdmin.adminId == 1) {
-            std::cout << "  \033[36m[7]\033[0m Register New Admin\n";
-            std::cout << "  \033[36m[8]\033[0m Delete an Admin\n";
+            std::cout << "  \033[36m[8]\033[0m Register New Admin\n";
+            std::cout << "  \033[36m[9]\033[0m Delete an Admin\n";
         }
         std::cout << "  \033[36m[0]\033[0m Logout\n\n";
 
@@ -508,6 +509,15 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
             }
 
             case 7: {
+                clearScreen();
+                adminControl.display_financial_revenue_report();
+                std::cout << "  Press Enter to return...";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            }
+
+            case 8: {
                 if (loggedInAdmin.adminId != 1) {
                     std::cout << "\n  Access denied.\n";
                     std::cout << "\n  Press Enter to return...";
@@ -542,7 +552,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 break;
             }
 
-            case 8: {
+            case 9: {
                 if (loggedInAdmin.adminId != 1) {
                     std::cout << "\n  Access denied.\n";
                     std::cin.ignore(1000, '\n');
@@ -615,10 +625,11 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
         std::cout << "==========================================================================\033[0m\n\n";
 
         std::cout << "  \033[36m[1]\033[0m Start Session\n";
-        std::cout << "  \033[36m[2]\033[0m View My Sessions\n";
-        std::cout << "  \033[36m[3]\033[0m View My Bill\n";
-        std::cout << "  \033[36m[4]\033[0m Checkout Session\n";
-        std::cout << "  \033[36m[5]\033[0m Edit My Profile\n";
+        std::cout << "  \033[36m[2]\033[0m View My Current Bill\n";
+        std::cout << "  \033[36m[3]\033[0m View My Billing History\n";
+        std::cout << "  \033[36m[4]\033[0m Print Physical Receipt\n";
+        std::cout << "  \033[36m[5]\033[0m Checkout Session\n";
+        std::cout << "  \033[36m[6]\033[0m Edit My Profile\n";
         std::cout << "  \033[36m[0]\033[0m Logout\n\n";
 
         std::cout << "\033[36m==========================================================================\033[0m\n\n";
@@ -697,28 +708,38 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
             case 2: {
                 clearScreen();
                 std::cout << "\033[36m==========================================================================\n";
-                std::cout << "         MY SESSIONS\n";
+                std::cout << "         MY CURRENT BILL\n";
                 std::cout << "==========================================================================\033[0m\n\n";
 
-                vector<UserSession> allSessions = dbManager.get_all_sessions();
+                std::vector<UserSession> allSessions = dbManager.get_all_sessions();
                 bool found = false;
 
                 for (const auto& session : allSessions) {
                     if (session.userId == loggedInUser.uniqueId) {
-                        std::cout << "  Internet Time : " << session.internetMinutes << " mins\n";
-                        std::cout << "  Gaming Time   : " << session.gamingMinutes << " mins\n";
-                        std::cout << "  Prints        : " << session.printsCount << " pages\n";
-                        std::cout << "  Scans         : " << session.scansCount << " pages\n";
+                        std::cout << std::fixed << std::setprecision(2);
+
+                        double internetCost = session.internetMinutes * 0.10;
+                        double gamingCost = session.gamingMinutes * 0.15;
+                        double printsCost = session.printsCount * 0.25;
+                        double scansCost = session.scansCount * 0.50;
+                        double currentTotal = internetCost + gamingCost + printsCost + scansCost;
+
+                        std::cout << "  Active Session Breakdown:\n";
+                        std::cout << "  Internet (" << session.internetMinutes << " mins) : $" << internetCost << "\n";
+                        std::cout << "  Gaming (" << session.gamingMinutes << " mins)   : $" << gamingCost << "\n";
+                        std::cout << "  Prints (" << session.printsCount << " pages)  : $" << printsCost << "\n";
+                        std::cout << "  Scans (" << session.scansCount << " docs)   : $" << scansCost << "\n";
                         std::cout << "  ------------------------------------------\n";
+                        std::cout << "  CURRENT DUE: $" << currentTotal << "\n";
                         found = true;
+                        break;
                     }
                 }
 
                 if (!found) {
-                    std::cout << "  No active sessions found.\n";
+                    std::cout << "  No active session. Start a session to see your current bill.\n";
                 }
 
-                std::cout << "\033[36m==========================================================================\033[0m\n";
                 std::cout << "\n  Press Enter to return...";
                 std::cin.ignore(1000, '\n');
                 std::cin.get();
@@ -731,8 +752,11 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 std::cout << "         MY BILL HISTORY\n";
                 std::cout << "==========================================================================\033[0m\n\n";
 
-                std::cout << "  Total Lifetime Bill: $" << loggedInUser.totalBill << "\n\n";
 
+                PublicUser refreshedUser;
+                userControl.find_user_by_id(loggedInUser.uniqueId, refreshedUser);
+
+                std::cout << "  Total Lifetime Bill: $" << refreshedUser.totalBill << "\n\n";
                 UserCompleteAudit audit = adminControl.compile_user_audit_packet(loggedInUser.uniqueId);
 
                 if (audit.paymentHistory.empty()) {
@@ -756,8 +780,36 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 std::cin.get();
                 break;
             }
-
             case 4: {
+                clearScreen();
+                std::cout << "\033[36m==========================================================================\n";
+                std::cout << "         PRINT RECEIPT\n";
+                std::cout << "==========================================================================\033[0m\n\n";
+
+                UserCompleteAudit audit = adminControl.compile_user_audit_packet(loggedInUser.uniqueId);
+
+                if (audit.paymentHistory.empty()) {
+                    std::cout << "  No receipts available.\n";
+                } else {
+                    int counter = 1;
+                    for (const auto& receipt : audit.paymentHistory) {
+                        std::cout << "  Receipt #" << counter++ << "\n";
+                        std::cout << "    Internet : $" << receipt.internetPaid << "\n";
+                        std::cout << "    Gaming   : $" << receipt.gamingPaid << "\n";
+                        std::cout << "    Printing : $" << receipt.printsPaid << "\n";
+                        std::cout << "    Scanning : $" << receipt.scansPaid << "\n";
+                        std::cout << "    TOTAL    : $" << receipt.totalPaid << "\n";
+                        std::cout << "  ------------------------------------------\n";
+                    }
+                }
+
+                std::cout << "\n  Press Enter to return...";
+                std::cin.ignore(1000, '\n');
+                std::cin.get();
+                break;
+            }
+
+            case 5: {
                 clearScreen();
                 std::cout << "\033[36m==========================================================================\n";
                 std::cout << "         CHECKOUT SESSION\n";
@@ -777,7 +829,7 @@ void showAdminDashboard(AdminUser& loggedInAdmin) {
                 break;
             }
 
-            case 5:
+            case 6:
                 showEditProfile(loggedInUser);
                 break;
 
