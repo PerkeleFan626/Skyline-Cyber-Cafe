@@ -204,10 +204,10 @@ void AdminManager::display_financial_revenue_report() {
         totalHistoricalCash += user.totalBill;
     }
 
-    std::cout << " [A] CURRENT REVENUE EARNED (Settled Lifetime Accounts):\n";
-    std::cout << "- Total Registered Accounts: " << allUsers.size() << "\n";
-    std::cout << "- Total Realized Cash Collected: \033[32m$" << totalHistoricalCash << "\033[0m\n";
-    std::cout << "--------------------------------------------------------\n";
+    cout << " [A] CURRENT REVENUE EARNED (Settled Lifetime Accounts):\n";
+    cout << "- Total Registered Accounts: " << allUsers.size() << "\n";
+    cout << "- Total Realized Cash Collected: \033[32m$" << totalHistoricalCash << "\033[0m\n";
+    cout << "--------------------------------------------------------\n";
 
     double upcomingInternet = 0;
     double upcomingGaming = 0;
